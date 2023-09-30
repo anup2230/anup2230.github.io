@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Responsive Portfolio Website Alexa
 ## [Watch it on youtube](https://youtu.be/27JtRAI3QO8)
 ### Responsive Portfolio Website Alexa
@@ -11,3 +12,7 @@
 💙 Join the channel to see more videos like this. [Bedimcode](https://www.youtube.com/c/Bedimcode)
 
 ![preview img](/preview.png)
+=======
+# anup2230.github.io
+Anup's Personal Website
+>>>>>>> 4823259ca787ab12b1e9059392c50f135012b25c
