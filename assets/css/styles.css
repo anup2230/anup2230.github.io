@@ -292,6 +292,10 @@ img {
   font-size: 1.25rem;
 }
 
+.home__button:hover .button__icon{
+  transform: translateX(.25rem);
+}
+
 /*==================== BUTTONS ====================*/
 
 .button{
@@ -370,6 +374,9 @@ img {
   /*justify-content: center;*/
 }
 
+.about__button:hover .button__icon{
+  transform: scale(1.2);
+}
 /*==================== SKILLS ====================*/
 
 
