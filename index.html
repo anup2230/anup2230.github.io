@@ -50,27 +50,8 @@
                             <i class="uil uil-message nav__icon"></i> Contact Me
                         </a>
                     </li>
-
-                    <script>
-                        let prevScrollpos = window.pageYOffset;
-                        window.onscroll = function() {
-                            let currentScrollPos = window.pageYOffset;
-                            if (prevScrollpos > currentScrollPos && currentScrollPos > 0) {
-                            document.querySelector(".nav__container").style.top = "0";
-                            } else {
-                            document.querySelector(".nav__container").style.top = "-64px";
-                            }
-                            prevScrollpos = currentScrollPos;
-                        }
-                    </script>
                 </u1>
                 
-            </div>
-
-            <div class="nav__btns">
-                <div class="nav__toggle" id="nav-toggle">
-                    <i class="uil uil-apps"></i>
-                </div>
             </div>
         </nav>
             
