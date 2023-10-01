@@ -215,6 +215,34 @@ img {
   color: var(--first-color);
 }
 
+.nav__logo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 25px;
+  height: 60px;
+  background-color: var(--first-color);
+  animation: move 3s ease-in-out infinite;
+}
+
+@keyframes move {
+  0% {
+      transform: translateX(0);
+  }
+  50% {
+      transform: translateX(calc(100vw - 50px));
+  }
+  100% {
+      transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navbar__logo {
+      animation: none;
+  }
+}
+
 /*==================== HOME ====================*/
 /* .home__container{
   -template-columns: .5fr 3fr;
