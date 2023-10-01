@@ -169,12 +169,22 @@ img {
 .nav__list {
   list-style: none;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
-  max-width: 968px;
+  max-width: 100%;
   margin: 0 auto;
   height: 64px;
-  padding: 0 1rem;
+  padding: 0 0;
+}
+
+.nav__banner {
+  font-size: 2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #333;
+  text-shadow: 2px 2px 0 #fff, 4px 4px 0 rgba(0, 0, 0, 0.1);
+  margin-right: auto;
+  padding-left: 50px;
 }
 
 .nav__item {
@@ -220,7 +230,7 @@ img {
   top: 0;
   left: 0;
   width: 25px;
-  height: 60px;
+  height: 70px;
   background-color: var(--first-color);
   animation: move 3s ease-in-out infinite;
 }
