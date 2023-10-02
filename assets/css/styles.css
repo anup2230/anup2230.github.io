@@ -237,7 +237,7 @@ img {
 .home__social{
   display: grid;
   grid-template-columns: max-content;
-  row-gap: 1rem;
+  grid-column-gap: 3rem ;
 }
 
 .home__social-icon{
@@ -403,6 +403,7 @@ img {
 .contact__information{
   display: flex;
   margin-bottom: var(--mb-2);
+  row-gap: 0.5rem;
 }
 
 .contact__icon{
