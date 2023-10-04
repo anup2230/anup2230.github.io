@@ -16,6 +16,7 @@
         <title>Responsive Portfolio Website</title>
     </head>
     <body>
+        
         <!--==================== HEADER ====================-->
         <nav class="nav__container">
             <div class="nav__menu" id="nav-menu">
@@ -57,6 +58,7 @@
             </div>
         </nav>
         
+
         <!--==================== MAIN ====================-->
         <main class="main">
             <!--==================== HOME ====================-->
@@ -143,11 +145,11 @@
                                     <spam class="about__info-name">Companies <br> worked</spam>
                                 </div>
 
-                                <dic class="about__buttons">
-                                    <a dwonlaod="" href="assets/pdf/Anup-Cv.pdf" class="button button--flex about__button">
+                                <div class="about__buttons">
+                                    <a download="" href="assets/pdf/Anup-Cv.pdf" class="button button--flex about__button">
                                         Download CV <i class="uil uil-file-download-alt button__icon"></i>
                                     </a>
-                                </dic>
+                                </div>
                             </div>
                     </div>
                 </div>
@@ -199,32 +201,37 @@
                             </div>
                         </div>
                     </div>
+
                     <form action="send-email.php" method="POST" class="contact__form grid">
                         <div class="contact__inputs grid">
                             <div class="contact__content">
+                                <input type="text" class="contact__input" placeholder="Name" name="name">
                                 <label for="" class="contact__label">Name</label>
-                                <input type="text" class="contact__input" name="name">
+                                <div class="contact__shadow"></div>
                             </div>
 
                             <div class="contact__content">
+                                <input type="email" class="contact__input" placeholder="Email" name="email">
                                 <label for="" class="contact__label">Email</label>
-                                <input type="email" class="contact__input" name="email">
+                                <div class="contact__shadow"></div>
                             </div>
                         </div>
                         <div class="contact__content">
+                            <input type="text" class="contact__input" placeholder="Subject" name="subject">
                             <label for="" class="contact__label">Subject</label>
-                            <input type="text" class="contact__input" name="subject">
+                            <div class="contact__shadow"></div>
                         </div>
 
                         <div class="contact__content">
+                            <textarea name="" id="" cols="0" rows="7" class="contact__input" placeholder="Message" name="message"></textarea>
                             <label for="" class="contact__label">Message</label>
-                            <textarea name="" id="" cols="0" rows="7" class="contact__input" name="message"></textarea>
+                            <div class="contact__shadow"></div>
                         </div>
 
                         <div>
-                            <button type="submit" class="button button--flex">
-                                Send Message
-                            </button>
+                            <a type="submit" href="/send-email.php" class="button button--flex button--send">
+                                Submit <i class="uil uil-envelope-upload"></i>
+                            </a>
                         </div>
                     </form>
                 </div>
