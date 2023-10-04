@@ -2,7 +2,13 @@
 
 /*==================== ACCORDION SKILLS ====================*/
 
+function submitForm() {
+    // Get the form element
+    const form = document.querySelector('.contact__form');
 
+    // Submit the form
+    form.submit();
+}
 
 /*==================== QUALIFICATION TABS ====================*/
 const tabs = document.querySelectorAll('[data-target]'),
