@@ -23,6 +23,11 @@ a{color:inherit}
 #sky{position:fixed;inset:0;width:100%;height:100lvh;display:block;z-index:0}
 
 /* ---------- HUD: altitude + position ---------- */
+.tri-label{
+  position:fixed;left:0;top:0;z-index:3;max-width:14rem;text-align:right;font-size:.82rem;line-height:1.4;color:var(--soft);
+  pointer-events:none;opacity:0;transition:opacity .4s;text-shadow:0 1px 6px rgba(0,0,0,.6)
+}
+.tri-label b{color:var(--white);font-weight:600}
 .hud{
   background:rgba(7,13,34,.42);border:1px solid var(--edge);border-radius:14px;padding:.8rem 1rem;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
   position:fixed;left:clamp(1rem,3vw,2.25rem);bottom:clamp(1rem,3vw,2rem);z-index:5;
@@ -117,6 +122,8 @@ footer{position:relative;z-index:2;padding:0 clamp(1.25rem,6vw,7rem) 2.5rem;colo
 </head>
 <body>
 <canvas id="sky" aria-hidden="true"></canvas>
+
+<p class="tri-label" id="triLabel"><b>A three-body system, simulated live with real gravity.</b> A nod to The Three-Body Problem, which I'm reading now.</p>
 
 <div class="hud" aria-hidden="true">
   <div class="hud__label">Altitude</div>
@@ -417,6 +424,102 @@ function drawSky(p, horizonY) {
   return hor;
 }
 
+/* ---------- three-body system: real gravity, integrated every frame ---------- */
+const tri = {b: [], trails: [[], [], []], r: rng(99)};
+function triReset() {
+  const r = tri.r;
+  for (;;) {
+    const b = [0, 1, 2].map((_, i) => { const a = i * 2.094 + (r() - .5) * 1.2, d = .8 + r() * .7; return {x: Math.cos(a) * d, y: Math.sin(a) * d, vx: (r() - .5) * 1.1, vy: (r() - .5) * 1.1}; });
+    const cx = (b[0].x + b[1].x + b[2].x) / 3, cy = (b[0].y + b[1].y + b[2].y) / 3;
+    const mvx = (b[0].vx + b[1].vx + b[2].vx) / 3, mvy = (b[0].vy + b[1].vy + b[2].vy) / 3;
+    b.forEach(o => { o.x -= cx; o.y -= cy; o.vx -= mvx; o.vy -= mvy; });
+    let E = 0;
+    b.forEach(o => E += .5 * (o.vx * o.vx + o.vy * o.vy));
+    for (let i = 0; i < 3; i++) for (let j = i + 1; j < 3; j++) E -= 1 / Math.hypot(b[i].x - b[j].x, b[i].y - b[j].y);
+    let close = false;
+    for (let i = 0; i < 3; i++) for (let j = i + 1; j < 3; j++) if (Math.hypot(b[i].x - b[j].x, b[i].y - b[j].y) < .7) close = true;
+    if (!close && E < -.5 && E > -1.6) { tri.b = b; tri.trails = [[], [], []]; return; } // bound system: stays chaotic instead of flying apart at once
+  }
+}
+function triStep(dt) {
+  const b = tri.b, eps = .03;
+  const acc = () => b.map((o, i) => {
+    let ax = 0, ay = 0;
+    b.forEach((q, j) => { if (i === j) return; const dx = q.x - o.x, dy = q.y - o.y, d2 = dx * dx + dy * dy + eps, inv = 1 / (d2 * Math.sqrt(d2)); ax += dx * inv; ay += dy * inv; });
+    return [ax, ay];
+  });
+  let a = acc(); // velocity Verlet
+  b.forEach((o, i) => { o.vx += a[i][0] * dt / 2; o.vy += a[i][1] * dt / 2; o.x += o.vx * dt; o.y += o.vy * dt; });
+  a = acc();
+  b.forEach((o, i) => { o.vx += a[i][0] * dt / 2; o.vy += a[i][1] * dt / 2; });
+}
+const TRI_COLORS = [[255, 236, 200], [255, 160, 90], [170, 205, 255]];
+const triLabel = document.getElementById('triLabel');
+function drawTriple(p, t) {
+  const vis = 1 - smooth(.08, .17, p);
+  triLabel.style.opacity = vis > .05 && W > 900 ? vis * smooth(1500, 3000, t) : 0;
+  if (vis <= 0) return;
+  if (!tri.b.length) triReset();
+  if (!reduce) for (let k = 0; k < 6; k++) triStep(.0035);
+  const far = tri.b.some(o => Math.hypot(o.x, o.y) > 2.6);
+  if (far) triReset();
+  const k = clamp(W / 1440, .6, 1) * 40;
+  const cx = W * (W > 900 ? .79 : .72), cy = H * .14 - p * H * 1.2;
+  tri.b.forEach((o, i) => {
+    const tr = tri.trails[i]; tr.push([o.x, o.y]); if (tr.length > 140) tr.shift();
+    const c = TRI_COLORS[i];
+    ctx.lineWidth = 1.4;
+    for (let j = 1; j < tr.length; j++) {
+      ctx.strokeStyle = css(c, vis * .55 * j / tr.length);
+      ctx.beginPath(); ctx.moveTo(cx + tr[j - 1][0] * k, cy + tr[j - 1][1] * k); ctx.lineTo(cx + tr[j][0] * k, cy + tr[j][1] * k); ctx.stroke();
+    }
+    const x = cx + o.x * k, y = cy + o.y * k;
+    const g = ctx.createRadialGradient(x, y, 0, x, y, 16);
+    g.addColorStop(0, css(c, vis)); g.addColorStop(.25, css(c, vis * .45)); g.addColorStop(1, css(c, 0));
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, 16, 0, 7); ctx.fill();
+  });
+  triLabel.style.transform = `translate(${cx - 2.6 * k - triLabel.offsetWidth}px,${cy - 22}px)`;
+}
+
+/* ---------- satellites ---------- */
+const SATS = [
+  {y: .16, speed: .018, ang: -.08, size: 1.4, off: .1, iss: true},
+  {y: .36, speed: .03, ang: .12, size: .8, off: .55},
+  {y: .52, speed: .024, ang: -.15, size: .7, off: .85},
+];
+function drawSatellites(p, t) {
+  const vis = 1 - smooth(.07, .16, p);
+  if (vis <= 0) return;
+  SATS.forEach((s, i) => {
+    const span = W + 200, x = ((s.off * span + (reduce ? 0 : t * s.speed)) % span) - 100;
+    const y = H * s.y + Math.tan(s.ang) * (x - W / 2) - p * H * 1.6;
+    ctx.save(); ctx.translate(x, y); ctx.rotate(s.ang); ctx.scale(s.size, s.size); ctx.globalAlpha = vis;
+    ctx.fillStyle = '#d9c38a'; ctx.fillRect(-4, -3, 8, 6);                      // body
+    ctx.fillStyle = '#3b5fb0';                                                  // solar panels
+    if (s.iss) { [-22, -14, 6, 14].forEach(px => ctx.fillRect(px, -7, 7, 14)); ctx.fillStyle = '#c9ced8'; ctx.fillRect(-24, -1, 48, 2); }
+    else { ctx.fillRect(-15, -2.5, 9, 5); ctx.fillRect(6, -2.5, 9, 5); }
+    const blink = reduce ? 1 : (Math.sin(t / 300 + i * 2) > .6 ? 1 : 0);
+    ctx.fillStyle = `rgba(255,80,70,${blink})`; ctx.beginPath(); ctx.arc(0, -4, 1.4, 0, 7); ctx.fill();
+    ctx.restore();
+  });
+}
+
+/* ---------- comet trail behind the pointer while in space ---------- */
+const comet = [];
+let cometOn = matchMedia('(pointer: fine)').matches && !reduce;
+if (cometOn) addEventListener('pointermove', e => { comet.push({x: e.clientX, y: e.clientY, t: performance.now()}); if (comet.length > 40) comet.shift(); });
+function drawComet(p, t) {
+  const vis = 1 - smooth(.1, .2, p);
+  if (!cometOn || vis <= 0) return;
+  while (comet.length && t - comet[0].t > 600) comet.shift();
+  for (let i = 0; i < comet.length; i++) {
+    const c = comet[i], age = (t - c.t) / 600, a = (1 - age) * vis, r = 1 + (1 - age) * 3.5;
+    const g = ctx.createRadialGradient(c.x, c.y, 0, c.x, c.y, r * 3);
+    g.addColorStop(0, `rgba(210,228,255,${a * .9})`); g.addColorStop(1, 'rgba(210,228,255,0)');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(c.x, c.y, r * 3, 0, 7); ctx.fill();
+  }
+}
+
 function drawStars(p, t) {
   const a = (1 - smooth(.1, .22, p)) + smooth(.86, .95, p) * .55;
   if (a <= .01) return;
@@ -488,6 +591,72 @@ function drawClouds(p, t, pass) {
     else ctx.drawImage(c.spr, x, y - h / 2, w, h);
   }
   ctx.globalAlpha = 1;
+}
+
+/* ---------- storm in the cloud layer, clearing into a multi-cloud setup ---------- */
+const rain = Array.from({length: 160}, (_, i) => ({x: hash(i * 3.1), y: hash(i * 7.7), l: .5 + hash(i * 1.3) * .5, v: .7 + hash(i * 5.5) * .6}));
+let bolt = null, nextBolt = 1200;
+function drawStorm(p, t) {
+  const a = smooth(.395, .425, p) * (1 - smooth(.455, .478, p));
+  if (a <= 0) { bolt = null; return; }
+  ctx.fillStyle = `rgba(48,56,74,${a * .72})`; ctx.fillRect(0, 0, W, H);
+  // rain
+  ctx.strokeStyle = `rgba(210,222,240,${a * .45})`; ctx.lineWidth = 1.2; ctx.beginPath();
+  rain.forEach(d => {
+    const y = ((d.y * H + (reduce ? 0 : t * .9 * d.v)) % (H + 60)) - 30, x = (d.x * W + (y * .18)) % W;
+    ctx.moveTo(x, y); ctx.lineTo(x - 5 * d.l, y + 22 * d.l);
+  });
+  ctx.stroke();
+  if (reduce) return;
+  // lightning
+  if (t > nextBolt) {
+    const r = rng(t | 0), pts = [];
+    let x = W * (.45 + r() * .45), y = -10;
+    while (y < H * (.55 + r() * .2)) { pts.push([x, y]); x += (r() - .5) * 70; y += 25 + r() * 35; }
+    bolt = {pts, t0: t}; nextBolt = t + 1400 + r() * 2200;
+  }
+  if (bolt) {
+    const age = (t - bolt.t0) / 260;
+    if (age > 1) { bolt = null; return; }
+    const f = (1 - age) * a;
+    ctx.fillStyle = `rgba(235,240,255,${f * .35})`; ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = `rgba(255,255,255,${f})`; ctx.lineWidth = 2.5; ctx.shadowColor = '#cfe0ff'; ctx.shadowBlur = 18;
+    ctx.beginPath(); bolt.pts.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.stroke();
+    ctx.shadowBlur = 0;
+  }
+}
+
+const PROVIDERS = [
+  {name: 'AWS', x: .735, y: .22, spr: 1},
+  {name: 'Azure', x: .755, y: .47, spr: 3},
+  {name: 'Google Cloud', x: .735, y: .72, spr: 4},
+];
+function drawProviders(p, t) {
+  const a = smooth(.452, .476, p) * (1 - smooth(.515, .54, p));
+  if (a <= 0 || W < 900) return;
+  const drift = -(p - .49) * H * 1.6, k = clamp(W / 1440, .75, 1.1);
+  const hub = {x: W * .6, y: H * .47 + drift};
+  ctx.save(); ctx.globalAlpha = a;
+  // links: animated dashes flowing from the hub out to each provider
+  ctx.setLineDash([6, 8]); ctx.lineDashOffset = reduce ? 0 : -t / 40;
+  ctx.strokeStyle = 'rgba(232,140,52,.95)'; ctx.lineWidth = 2.5;
+  PROVIDERS.forEach(c => { ctx.beginPath(); ctx.moveTo(hub.x, hub.y); ctx.lineTo(W * c.x, H * c.y + drift); ctx.stroke(); });
+  ctx.setLineDash([]);
+  PROVIDERS.forEach((c, i) => {
+    ctx.font = `800 ${Math.round(30 * k)}px "Big Shoulders Display", Impact, sans-serif`;
+    const w = Math.max(260 * k, ctx.measureText(c.name.toUpperCase()).width * 1.9), h = w * 200 / 420;
+    const x = W * c.x, y = H * c.y + drift + (reduce ? 0 : Math.sin(t / 1400 + i * 2) * 5);
+    ctx.drawImage(cloudSprites[c.spr], x - w / 2, y - h / 2, w, h);
+    ctx.fillStyle = '#16204a'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(c.name.toUpperCase(), x, y + 4 * k);
+  });
+  // hub
+  ctx.font = `600 ${Math.round(15 * k)}px "Hanken Grotesk", system-ui, sans-serif`;
+  const label = 'Terraform', tw = ctx.measureText(label).width + 28 * k, th = 34 * k;
+  ctx.fillStyle = '#16204a'; ctx.beginPath(); ctx.roundRect(hub.x - tw / 2, hub.y - th / 2, tw, th, th / 2); ctx.fill();
+  ctx.strokeStyle = 'rgba(255,194,122,.9)'; ctx.lineWidth = 2; ctx.stroke();
+  ctx.fillStyle = '#F6F8FC'; ctx.fillText(label, hub.x, hub.y + 1);
+  ctx.restore();
 }
 
 function drawFog(p) {
@@ -803,12 +972,17 @@ function frame(t) {
   const horizonY = H * (p < .22 ? lerp(.74, .62, smooth(0, .22, p)) : .62);
   drawSky(p, horizonY);
   drawStars(p, t);
+  drawTriple(p, t);
+  drawSatellites(p, t);
   drawSun(p);
   drawEarth(p);
   drawClouds(p, t, 'back');
   drawLand(p);
   drawClouds(p, t, 'front');
   drawFog(p);
+  drawStorm(p, t);
+  drawProviders(p, t);
+  drawComet(p, t);
   hud(p);
   requestAnimationFrame(frame);
 }
