@@ -27,6 +27,7 @@ a{color:inherit}
   position:fixed;left:0;top:0;z-index:3;max-width:14rem;text-align:right;font-size:.82rem;line-height:1.4;color:var(--soft);
   pointer-events:none;opacity:0;transition:opacity .4s;text-shadow:0 1px 6px rgba(0,0,0,.6)
 }
+.jump-label{text-align:left}
 .tri-label b{color:var(--white);font-weight:600}
 .hud{
   background:rgba(7,13,34,.42);border:1px solid var(--edge);border-radius:14px;padding:.8rem 1rem;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
@@ -124,6 +125,7 @@ footer{position:relative;z-index:2;padding:0 clamp(1.25rem,6vw,7rem) 2.5rem;colo
 <body>
 <canvas id="sky" aria-hidden="true"></canvas>
 
+<p class="tri-label jump-label" id="jumpLabel"><b>39 km.</b> An ode to Felix Baumgartner, who jumped from a balloon at this altitude in 2012 and broke the sound barrier in freefall.</p>
 <p class="tri-label" id="triLabel"><b>A three-body system, simulated live with real gravity.</b> A nod to The Three-Body Problem, which I'm reading now.</p>
 
 <div class="hud" aria-hidden="true">
@@ -508,40 +510,108 @@ function drawSatellites(p, t) {
   });
 }
 
-/* ---------- comet trail behind the pointer (or finger) under the night sky ---------- */
-const comet = [];
-const cometOn = !reduce;
-function cometAdd(x, y) { comet.push({x, y, t: performance.now()}); if (comet.length > 80) comet.shift(); }
-if (cometOn) {
-  addEventListener('pointermove', e => cometAdd(e.clientX, e.clientY), {passive: true});
-  addEventListener('touchmove', e => { const t0 = e.touches[0]; if (t0) cometAdd(t0.clientX, t0.clientY); }, {passive: true});
+/* ---------- the skydiver: an ode to the 2012 Stratos jump from 39 km ---------- */
+const jumpLabel = document.getElementById('jumpLabel');
+function capsulePos(p) { return [W * (W > 900 ? .19 : .3), H * .45 - (p - .2) * H * 3]; }
+function lanePos(p) {
+  const x = W > 900 ? W * .075 : W * .86;
+  let y = H * .4;
+  y = lerp(y, H * .7, smooth(.95, .985, p)); // touchdown in Chicago
+  return [x, y];
 }
-function drawComet(p, t) {
-  const vis = Math.max(1 - smooth(.12, .22, p), smooth(.86, .93, p));
-  while (comet.length && t - comet[0].t > 900) comet.shift();
-  if (!cometOn || vis <= 0 || comet.length < 2) return;
-  ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.lineCap = 'round';
-  // tapered tail
-  for (let i = 1; i < comet.length; i++) {
-    const a = comet[i - 1], b = comet[i], f = 1 - (t - b.t) / 900;
-    if (f <= 0) continue;
-    ctx.strokeStyle = `rgba(150,195,255,${f * .55 * vis})`; ctx.lineWidth = 2 + f * 9;
-    ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
-    ctx.strokeStyle = `rgba(255,255,255,${f * .8 * vis})`; ctx.lineWidth = 1 + f * 3;
-    ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
-    if (hash(b.t) > .82) { // sparks shed off the tail
-      const sx = b.x + (hash(b.t + 1) - .5) * 26 * (1 - f), sy = b.y + (hash(b.t + 2) - .5) * 26 * (1 - f);
-      ctx.fillStyle = `rgba(255,236,190,${f * vis})`; ctx.beginPath(); ctx.arc(sx, sy, 1.4, 0, 7); ctx.fill();
+function drawBalloon(p) {
+  const vis = smooth(.11, .13, p) * (1 - smooth(.27, .32, p));
+  if (vis <= 0) return;
+  const [cx, cy] = capsulePos(p), k = clamp(W / 1440, .7, 1.1);
+  ctx.save(); ctx.globalAlpha = vis;
+  // rigging and the huge, thin balloon above the capsule
+  ctx.strokeStyle = 'rgba(220,228,240,.6)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(cx - 10 * k, cy - 22 * k); ctx.lineTo(cx, cy - 150 * k); ctx.lineTo(cx + 10 * k, cy - 22 * k); ctx.stroke();
+  const by = cy - 150 * k, bw = 120 * k, bh = 260 * k;
+  const g = ctx.createLinearGradient(cx - bw, 0, cx + bw, 0);
+  g.addColorStop(0, 'rgba(200,215,235,.18)'); g.addColorStop(.5, 'rgba(240,246,255,.42)'); g.addColorStop(1, 'rgba(200,215,235,.15)');
+  ctx.fillStyle = g; ctx.beginPath();
+  ctx.moveTo(cx, by);
+  ctx.bezierCurveTo(cx - bw * .3, by - bh * .3, cx - bw, by - bh * .7, cx, by - bh);
+  ctx.bezierCurveTo(cx + bw, by - bh * .7, cx + bw * .3, by - bh * .3, cx, by);
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(255,255,255,.25)'; ctx.beginPath(); ctx.moveTo(cx, by); ctx.lineTo(cx, by - bh); ctx.stroke();
+  // capsule: a pod with a round hatch and a small ledge
+  ctx.fillStyle = '#d9dee7'; ctx.beginPath(); ctx.ellipse(cx, cy, 22 * k, 24 * k, 0, 0, 7); ctx.fill();
+  ctx.fillStyle = '#7d8799'; ctx.beginPath(); ctx.ellipse(cx, cy + 22 * k, 24 * k, 5 * k, 0, 0, 7); ctx.fill();
+  ctx.fillStyle = '#20283c'; ctx.beginPath(); ctx.ellipse(cx + 8 * k, cy - 2 * k, 9 * k, 12 * k, 0, 0, 7); ctx.fill();
+  ctx.fillStyle = '#c3c9d4'; ctx.fillRect(cx + 16 * k, cy + 10 * k, 16 * k, 3 * k);
+  ctx.restore();
+}
+function diver(x, y, rot, k, chute, t, stand) {
+  ctx.save(); ctx.translate(x, y); ctx.rotate(rot); ctx.scale(k, k);
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  if (chute > 0) { // ram-air canopy with alternating cells
+    const cw = 78 * chute, ch = 18 * chute, cy = -72 * chute;
+    ctx.strokeStyle = 'rgba(230,236,245,.75)'; ctx.lineWidth = .8;
+    [-1, -.5, .5, 1].forEach(f => { ctx.beginPath(); ctx.moveTo(f * cw / 2, cy + ch * .6); ctx.lineTo(f * 4, -10); ctx.stroke(); });
+    for (let c = 0; c < 7; c++) {
+      const x0 = -cw / 2 + c * cw / 7;
+      ctx.fillStyle = c % 2 ? '#F6F8FC' : '#FF6B35';
+      ctx.beginPath(); ctx.moveTo(x0, cy + Math.sin(c / 6 * Math.PI) * -6 * chute); ctx.lineTo(x0 + cw / 7, cy + Math.sin((c + 1) / 6 * Math.PI) * -6 * chute);
+      ctx.lineTo(x0 + cw / 7, cy + ch + Math.sin((c + 1) / 6 * Math.PI) * -6 * chute); ctx.lineTo(x0, cy + ch + Math.sin(c / 6 * Math.PI) * -6 * chute); ctx.fill();
     }
   }
-  // glowing head, only while the pointer is moving
-  const h = comet[comet.length - 1], hf = 1 - (t - h.t) / 900;
-  if (hf > 0) {
-    const g = ctx.createRadialGradient(h.x, h.y, 0, h.x, h.y, 22);
-    g.addColorStop(0, `rgba(255,255,255,${hf * vis})`); g.addColorStop(.3, `rgba(170,210,255,${hf * .6 * vis})`); g.addColorStop(1, 'rgba(170,210,255,0)');
-    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(h.x, h.y, 22, 0, 7); ctx.fill();
+  const suit = '#EEF1F6', seam = '#AEB7C6';
+  ctx.strokeStyle = suit;
+  if (chute > .5 || stand) { // upright: standing on the ledge, or hanging under the canopy
+    ctx.lineWidth = 7; ctx.beginPath(); ctx.moveTo(0, -8); ctx.lineTo(0, 10); ctx.stroke();
+    ctx.lineWidth = 5; ctx.beginPath(); ctx.moveTo(-3, 10); ctx.lineTo(-5, 24); ctx.moveTo(3, 10); ctx.lineTo(5, 24); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(-3, -6); ctx.lineTo(-8, -14); ctx.moveTo(3, -6); ctx.lineTo(8, -14); ctx.stroke();
+    ctx.fillStyle = suit; ctx.beginPath(); ctx.arc(0, -15, 6, 0, 7); ctx.fill();
+    ctx.fillStyle = '#E2B04A'; ctx.beginPath(); ctx.ellipse(2.5, -15, 3, 4, 0, 0, 7); ctx.fill();
+  } else { // belly-to-earth freefall, head to the right
+    ctx.lineWidth = 9; ctx.beginPath(); ctx.moveTo(-10, 0); ctx.lineTo(10, 0); ctx.stroke();          // torso
+    ctx.lineWidth = 5.5;
+    ctx.beginPath(); ctx.moveTo(-10, 0); ctx.lineTo(-20, -6); ctx.lineTo(-28, -12); ctx.stroke();       // legs bent up
+    ctx.beginPath(); ctx.moveTo(-9, 2); ctx.lineTo(-21, -1); ctx.lineTo(-30, -6); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(8, -2); ctx.lineTo(14, -12); ctx.lineTo(22, -16); ctx.stroke();         // arms forward and up
+    ctx.beginPath(); ctx.moveTo(8, 1); ctx.lineTo(16, -7); ctx.lineTo(25, -9); ctx.stroke();
+    ctx.fillStyle = '#8b94a6'; ctx.fillRect(-8, -7, 12, 4);                                             // chest pack
+    ctx.fillStyle = suit; ctx.beginPath(); ctx.arc(16, 3, 6.5, 0, 7); ctx.fill();                      // helmet
+    ctx.fillStyle = '#E2B04A'; ctx.beginPath(); ctx.ellipse(19, 5, 3.4, 4, .4, 0, 7); ctx.fill();      // gold visor
+    ctx.strokeStyle = seam; ctx.lineWidth = .8; ctx.beginPath(); ctx.moveTo(-6, 4); ctx.lineTo(6, 4); ctx.stroke();
   }
   ctx.restore();
+}
+function drawSkydiver(p, t) {
+  const show = smooth(.11, .13, p);
+  if (show <= 0) { jumpLabel.style.opacity = 0; return; }
+  const [cx, cy] = capsulePos(p), k = clamp(W / 1440, .75, 1.15);
+  const jump = smooth(.2, .245, p);
+  const [lx, ly] = lanePos(p);
+  let x, y;
+  if (jump <= 0) { x = cx + 26 * k; y = cy - 15 * k; }
+  else { x = lerp(cx + 26 * k, lx, jump); y = lerp(cy - 15 * k, ly, jump) + Math.sin(jump * Math.PI) * 40 * k; }
+  const chute = smooth(.9, .93, p);
+  const wob = reduce ? 0 : Math.sin(t / 700) * 4;
+  const spin = smooth(.205, .25, p) * Math.PI * 4 * (1 - chute);          // the famous flat spin, then stable
+  const rot = jump <= 0 ? 0 : (chute > .5 ? Math.sin(t / 900) * .08 : .25 + spin + (reduce ? 0 : Math.sin(t / 900) * .06));
+  // wind streaks rushing past while in freefall
+  const fall = jump * (1 - chute);
+  if (fall > .05 && !reduce) {
+    ctx.save(); ctx.globalAlpha = show * fall * .55; ctx.strokeStyle = '#fff'; ctx.lineWidth = 1;
+    for (let i = 0; i < 9; i++) {
+      const sx = x + (hash(i) - .5) * 70 * k, len = (30 + hash(i + 3) * 60) * k;
+      const sy = y - 20 * k - (((t * .9 + hash(i + 7) * 400) % 400) / 400) * 160 * k;
+      ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(sx, sy - len); ctx.stroke();
+    }
+    // a faint shock cone while supersonic, high up in thin air
+    const mach = smooth(.215, .23, p) * (1 - smooth(.28, .32, p));
+    if (mach > 0) { ctx.globalAlpha = show * mach * .35; ctx.strokeStyle = '#cfe0ff'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(x - 46 * k, y - 60 * k); ctx.quadraticCurveTo(x, y + 30 * k, x + 46 * k, y - 60 * k); ctx.stroke(); }
+    ctx.restore();
+  }
+  ctx.save(); ctx.globalAlpha = show; diver(x + (jump > 0 ? wob * .5 : 0), y + (jump > 0 ? wob : 0), rot, k * 1.3, chute, t, jump <= 0); ctx.restore();
+  // caption beside the capsule around the moment of the jump
+  const lv = smooth(.165, .18, p) * (1 - smooth(.235, .255, p));
+  jumpLabel.style.opacity = lv;
+  jumpLabel.style.transform = `translate(${cx + 46 * k}px,${cy - 30 * k}px)`;
 }
 
 function drawStars(p, t) {
@@ -1130,11 +1200,12 @@ function frame(t) {
   drawSkyTrain(p, t);
   drawFlagSky(p, t);
   drawLand(p);
+  drawBalloon(p);
   drawClouds(p, t, 'front');
+  drawSkydiver(p, t);
   drawFog(p);
   drawStorm(p, t);
   drawProviders(p, t);
-  drawComet(p, t);
   hud(p);
   requestAnimationFrame(frame);
 }
