@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blog | Anup Patel</title>
+<meta name="description" content="Anup Patel's blog: notes on backend, infrastructure, cloud and whatever else he's building.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--white:#F6F8FC;--soft:#C9D3E6;--edge:rgba(255,255,255,.14);--glass:rgba(10,14,32,.6);--sun:#FFC27A;
+  --display:'Big Shoulders Display',Impact,sans-serif;--body:'Hanken Grotesk',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:#03040c}
+body{font-family:var(--body);color:var(--white);font-size:1.0625rem;line-height:1.65;-webkit-font-smoothing:antialiased;min-height:100vh}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--sun);outline-offset:3px;border-radius:4px}
+#sky{position:fixed;inset:0;width:100%;height:100%;z-index:0}
+.wrap{position:relative;z-index:1;width:min(46rem,100% - 2.5rem);margin:0 auto;padding:4.5rem 0 5rem}
+.back{display:inline-block;color:var(--soft);text-decoration:none;font-size:.95rem;margin-bottom:3rem}
+.back:hover{color:var(--white)}
+h1{font-family:var(--display);font-weight:900;text-transform:uppercase;font-size:clamp(4rem,12vw,7.5rem);line-height:.85}
+.lede{color:var(--soft);font-size:1.15rem;margin:1rem 0 3rem;max-width:36ch}
+.list{display:grid;gap:1rem}
+.post-card{display:block;text-decoration:none;background:var(--glass);border:1px solid var(--edge);border-radius:16px;padding:1.4rem 1.6rem;
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:border-color .2s}
+.post-card:hover{border-color:rgba(255,194,122,.6)}
+.post-card h2{font-family:var(--display);font-weight:800;font-size:1.9rem;line-height:1;text-transform:uppercase}
+.date{color:var(--sun);font-size:.85rem;font-weight:600;margin:.35rem 0 .5rem;display:block}
+.post-card p{color:var(--soft)}
+.empty{background:var(--glass);border:1px dashed var(--edge);border-radius:16px;padding:2rem 1.6rem;color:var(--soft)}
+.empty b{display:block;color:var(--white);font-size:1.15rem;margin-bottom:.3rem}
+article{background:var(--glass);border:1px solid var(--edge);border-radius:20px;padding:clamp(1.4rem,4vw,2.6rem);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+article h1{font-size:clamp(2.6rem,7vw,4.2rem);line-height:.92}
+.prose{margin-top:1.6rem}
+.prose>*+*{margin-top:1rem}
+.prose h2,.prose h3{font-family:var(--display);font-weight:800;text-transform:uppercase;line-height:1;margin-top:2rem}
+.prose h2{font-size:2rem}.prose h3{font-size:1.5rem}
+.prose a{color:var(--sun)}
+.prose ul,.prose ol{padding-left:1.3rem}
+.prose code{font-size:.9em;background:rgba(255,255,255,.08);padding:.1em .35em;border-radius:5px}
+.prose pre{background:rgba(0,0,0,.45);border:1px solid var(--edge);padding:1rem;border-radius:10px;overflow:auto}
+.prose pre code{background:none;padding:0}
+.prose img{max-width:100%;border-radius:10px}
+.prose blockquote{border-left:3px solid var(--sun);padding-left:1rem;color:var(--soft)}
+.arrive{position:fixed;inset:0;z-index:50;pointer-events:none;background:radial-gradient(circle at 50% 50%,rgba(0,0,0,0) var(--r),#000 calc(var(--r) * 1.5));--r:0px}
+@media (prefers-reduced-motion:reduce){.arrive{display:none}}
+</style>
+</head>
+<body>
+<canvas id="sky" aria-hidden="true"></canvas>
+<main class="wrap" id="app"></main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<script>
+(() => {
+'use strict';
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const app = document.getElementById('app');
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
+const fmt = d => { const [y, m, dd] = d.split('-').map(Number); return new Date(y, m - 1, dd).toLocaleDateString('en-US', {month: 'long', day: 'numeric', year: 'numeric'}); };
+let posts = null;
+
+async function load() {
+  if (posts) return posts;
+  try { const r = await fetch('blog/posts.json', {cache: 'no-store'}); posts = r.ok ? await r.json() : []; } catch (_) { posts = []; }
+  posts.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+  return posts;
+}
+async function render() {
+  const slug = decodeURIComponent(location.hash.slice(1));
+  const list = await load();
+  const post = slug && list.find(p => p.slug === slug);
+  if (post) {
+    let md = '';
+    try { const r = await fetch(`blog/posts/${encodeURIComponent(post.slug)}.md`, {cache: 'no-store'}); md = r.ok ? await r.text() : ''; } catch (_) {}
+    document.title = `${post.title} | Anup Patel`;
+    app.innerHTML = `<a class="back" href="blog.html#">← All posts</a>
+      <article><h1>${esc(post.title)}</h1><span class="date">${esc(fmt(post.date))}</span>
+      <div class="prose">${md ? marked.parse(md) : '<p>This post couldn\'t be loaded. Try again in a moment.</p>'}</div></article>`;
+    window.scrollTo(0, 0);
+    return;
+  }
+  document.title = 'Blog | Anup Patel';
+  app.innerHTML = `<a class="back" href="index.html">← Back to the site</a>
+    <h1>Blog</h1>
+    <p class="lede">You made it through the event horizon. Notes on backend, infrastructure, cloud and whatever else I'm building.</p>
+    <div class="list">${list.length ? list.map(p => `
+      <a class="post-card" href="#${encodeURIComponent(p.slug)}"><h2>${esc(p.title)}</h2><span class="date">${esc(fmt(p.date))}</span><p>${esc(p.summary || '')}</p></a>`).join('')
+      : `<div class="empty"><b>No posts yet.</b>The first one is on its way. Check back soon.</div>`}</div>`;
+}
+addEventListener('hashchange', render);
+render();
+
+/* quiet starfield, slowly drifting */
+const cv = document.getElementById('sky'), ctx = cv.getContext('2d');
+let W, H, stars = [];
+function size() {
+  const d = Math.min(2, devicePixelRatio || 1); W = innerWidth; H = innerHeight;
+  cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0);
+  stars = Array.from({length: Math.round(W * H / 4500)}, () => ({x: Math.random() * W, y: Math.random() * H, s: Math.random() * 1.3 + .3, a: .3 + Math.random() * .7, tw: Math.random() * 6}));
+}
+size(); addEventListener('resize', size);
+function draw(t) {
+  const g = ctx.createRadialGradient(W / 2, H * .3, 0, W / 2, H * .3, Math.max(W, H));
+  g.addColorStop(0, '#0d1236'); g.addColorStop(1, '#02030a');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = '#fff';
+  stars.forEach(s => { ctx.globalAlpha = s.a * (reduce ? 1 : .75 + .25 * Math.sin(t / 900 + s.tw)); ctx.fillRect(s.x, s.y, s.s, s.s); });
+  ctx.globalAlpha = 1;
+  if (!reduce) requestAnimationFrame(draw);
+}
+requestAnimationFrame(draw);
+
+/* coming out the other side, if you fell in through the black hole */
+let fell = false;
+try { fell = sessionStorage.getItem('fellIn') === '1'; sessionStorage.removeItem('fellIn'); } catch (_) {}
+if (fell && !reduce) {
+  const v = document.createElement('div'); v.className = 'arrive'; document.body.append(v);
+  const t0 = performance.now(), span = Math.hypot(innerWidth, innerHeight);
+  (function open(now) { const f = Math.min(1, (now - t0) / 900); v.style.setProperty('--r', (f * f * span) + 'px'); if (f < 1) requestAnimationFrame(open); else v.remove(); })(t0);
+}
+})();
+</script>
+</body>
+</html>
