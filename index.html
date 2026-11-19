@@ -23,6 +23,13 @@ a{color:inherit}
 #sky{position:fixed;inset:0;width:100%;height:100lvh;display:block;z-index:0}
 
 /* ---------- HUD: altitude + position ---------- */
+.bh-link{position:fixed;left:0;top:0;z-index:4;width:84px;height:84px;margin:-42px 0 0 -42px;border-radius:50%;opacity:0;pointer-events:none;cursor:pointer}
+.bh-link.live{pointer-events:auto}
+.bh-link span{position:absolute;left:50%;top:100%;transform:translate(-50%,4px);white-space:nowrap;font-size:.8rem;font-weight:600;color:var(--white);
+  background:rgba(7,13,34,.7);border:1px solid var(--edge);padding:.2rem .55rem;border-radius:999px;opacity:0;transition:opacity .2s}
+.bh-link:hover span,.bh-link:focus-visible span{opacity:1}
+.bh-link.live{opacity:1}
+.bh-fall{position:fixed;inset:0;z-index:100;pointer-events:none;background:radial-gradient(circle at var(--x) var(--y),#000 0,#000 var(--r),rgba(0,0,0,0) calc(var(--r) * 1.6));--r:0px}
 .tri-label{
   position:fixed;left:0;top:0;z-index:3;max-width:14rem;text-align:right;font-size:.82rem;line-height:1.4;color:var(--soft);
   pointer-events:none;opacity:0;transition:opacity .4s;text-shadow:0 1px 6px rgba(0,0,0,.6)
@@ -128,6 +135,7 @@ footer{position:relative;z-index:2;padding:0 clamp(1.25rem,6vw,7rem) 2.5rem;colo
 <body>
 <canvas id="sky" aria-hidden="true"></canvas>
 
+<a class="bh-link" id="bhLink" href="blog.html" aria-label="Blog"><span>Fall into the blog</span></a>
 <p class="tri-label jump-label" id="jumpLabel"><b>39 km.</b> An ode to Felix Baumgartner, who jumped from a balloon at this altitude in 2012 and broke the sound barrier in freefall.</p>
 <p class="tri-label" id="triLabel"><b>A three-body system, simulated live with real gravity.</b> A nod to The Three-Body Problem by Liu Cixin, which I'm reading now.</p>
 
@@ -285,7 +293,7 @@ footer{position:relative;z-index:2;padding:0 clamp(1.25rem,6vw,7rem) 2.5rem;colo
     </div>
   </section>
 </main>
-<footer>© 2026 Anup Patel. Drawn live in your browser, no images were harmed.</footer>
+<footer>© 2026 Anup Patel. Drawn live in your browser, no images were harmed. <a href="blog.html">Read the blog</a>.</footer>
 
 <script>
 (() => {
@@ -748,6 +756,60 @@ function drawVisitors(p, t) {
   if (visitors.comet) drawComet(visitors.comet, t, vis);
   if (visitors.ufo) drawUfo(visitors.ufo, t, vis);
 }
+
+/* ---------- a small black hole that leads to the blog ---------- */
+const bhLink = document.getElementById('bhLink');
+let bhHover = false, bhFalling = 0;
+bhLink.addEventListener('pointerenter', () => bhHover = true);
+bhLink.addEventListener('pointerleave', () => bhHover = false);
+function bhPos(p) { return W > 900 ? [W * .775, H * .6 - p * H * 1.4] : [W * .82, H * .5 - p * H * 1.4]; }
+function drawBlackHole(p, t) {
+  const vis = 1 - smooth(.06, .12, p);
+  const [x, y] = bhPos(p);
+  bhLink.classList.toggle('live', vis > .5);
+  bhLink.style.transform = `translate(${x}px,${y}px)`;
+  if (vis <= 0) return;
+  const k = clamp(W / 1440, .75, 1.15) * (bhHover ? 1.25 : 1) * (1 + bhFalling * 6), spin = reduce ? 0 : t / 900;
+  ctx.save(); ctx.globalAlpha = vis; ctx.translate(x, y);
+  // faint lensing halo
+  const halo = ctx.createRadialGradient(0, 0, 10 * k, 0, 0, 60 * k);
+  halo.addColorStop(0, 'rgba(255,170,90,.18)'); halo.addColorStop(1, 'rgba(255,170,90,0)');
+  ctx.fillStyle = halo; ctx.beginPath(); ctx.arc(0, 0, 60 * k, 0, 7); ctx.fill();
+  // accretion disk, back half (bent over the top by gravity)
+  const disk = (front) => {
+    for (let i = 0; i < 60; i++) {
+      const a = spin + i / 60 * Math.PI * 2, r = (26 + (i % 5) * 3.2) * k;
+      const sx = Math.cos(a) * r, sy = Math.sin(a) * r * .28;
+      if ((sy > 0) !== front) continue;
+      const hot = .5 + .5 * Math.cos(a - spin * 0 - Math.PI);       // the side spinning toward you glows hotter
+      ctx.fillStyle = `rgba(255,${150 + hot * 90 | 0},${80 + hot * 120 | 0},${.35 + hot * .55})`;
+      ctx.beginPath(); ctx.arc(sx, sy, (1.4 + hot * 1.4) * k, 0, 7); ctx.fill();
+    }
+  };
+  ctx.strokeStyle = 'rgba(255,200,140,.55)'; ctx.lineWidth = 3 * k;  // lensed image of the far side, arcing over the top
+  ctx.beginPath(); ctx.ellipse(0, 0, 22 * k, 20 * k, 0, Math.PI * 1.05, Math.PI * 1.95); ctx.stroke();
+  disk(false);
+  // event horizon and photon ring
+  ctx.fillStyle = '#000'; ctx.beginPath(); ctx.arc(0, 0, 14 * k, 0, 7); ctx.fill();
+  ctx.strokeStyle = 'rgba(255,236,200,.9)'; ctx.lineWidth = 1.4 * k; ctx.beginPath(); ctx.arc(0, 0, 15 * k, 0, 7); ctx.stroke();
+  disk(true);
+  ctx.restore();
+}
+bhLink.addEventListener('click', e => {
+  if (reduce) return;                                   // plain link when motion is reduced
+  e.preventDefault();
+  const [x, y] = bhPos(p), veil = document.createElement('div');
+  veil.className = 'bh-fall'; veil.style.setProperty('--x', x + 'px'); veil.style.setProperty('--y', y + 'px');
+  document.body.append(veil);
+  const t0 = performance.now(), span = Math.hypot(W, H) * 1.2;
+  (function fall(now) {
+    const f = Math.min(1, (now - t0) / 900);
+    bhFalling = f * f;
+    veil.style.setProperty('--r', (14 + f * f * f * span) + 'px');
+    if (f < 1) requestAnimationFrame(fall);
+    else { try { sessionStorage.setItem('fellIn', '1'); } catch (_) {} location.href = bhLink.href; }
+  })(t0);
+});
 
 function drawStars(p, t) {
   const a = (1 - smooth(.1, .22, p)) + smooth(.86, .95, p) * .55;
@@ -1819,6 +1881,7 @@ function frame(t) {
   drawTriple(p, t);
   drawSatellites(p, t);
   drawVisitors(p, t);
+  drawBlackHole(p, t);
   drawSun(p);
   drawEarth(p);
   drawClouds(p, t, 'back');
