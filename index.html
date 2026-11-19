@@ -1,585 +1,824 @@
 <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-        <!--==================== UNICONS ====================-->
-        <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
-        
-        <!--==================== SWIPER CSS ====================-->
-        <link rel="stylesheet" href="/assets/css/swiper-bundle.min.css">
-        
-        <!--==================== CSS ====================-->
-        <link rel="stylesheet" href="assets/css/styles.css">
-
-        <title>Responsive Portfolio Website</title>
-    </head>
-    <body>
-        <!--==================== HEADER ====================-->
-        <nav class="nav__container">
-            <div class="nav__logo"></div>
-            <div class="nav__menu" id="nav-menu">
-                <u1 class="nav__list grid">
-                    <div class="nav__banner">ANUP SANJEEV PATEL</div>
-                    <li class="nav__item">
-                        <a href="#home" class="nav__link">
-                            <i class="uil uil-home nav__icon"></i> Home
-                        </a>
-                    </li>
-                    <li class="nav__item">
-                        <a href="#about" class="nav__link">
-                            <i class="uil uil-user nav__icon"></i> About
-                        </a>
-                    </li>
-                    <li class="nav__item">
-                        <a href="#skills" class="nav__link">
-                            <i class="uil uil-file-alt nav__icon"></i> Skills
-                        </a>
-                    </li>
-                    <li class="nav__item">
-                        <a href="#services" class="nav__link">
-                            <i class="uil uil-briefcase-alt nav__icon"></i> Services
-                        </a>
-                    </li>
-                    <li class="nav__item">
-                        <a href="#portfolio" class="nav__link">
-                            <i class="uil uil-scenery nav__icon"></i> Portfolio
-                        </a>
-                    </li>
-                    <li class="nav__item">
-                        <a href="#contact" class="nav__link">
-                            <i class="uil uil-message nav__icon"></i> Contact Me
-                        </a>
-                    </li>
-                </u1>
-                
-                
-            </div>
-        </nav>
-        
-        <!--==================== MAIN ====================-->
-        <main class="main">
-            <!--==================== HOME ====================-->
-            <section class="home section" id="home">
-                <div class="home__container container grid">
-                    <div class="home__content grid">
-                        
-                        <div class="home__social">
-                            <a href="https://www.linkedin.com/in/anup-patel2230/" target="_blank" class="home__social-icon">
-                                <i class="uil uil-linkedin-alt"></i>
-                            </a>
-
-                            <a href="https://www.github.com/anup2230/" target="_blank" class="home__social-icon">
-                                <i class="uil uil-github-alt"></i>
-                            </a>
-                        </div>
-
-                        <div class="home__img">
-                            <svg class="home__blob" viewBox="0 0 200 187" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                                <mask id="mask0" mask-type="alpha">
-                                    <path d="M190.312 36.4879C206.582 62.1187 201.309 102.826 182.328 134.186C163.346 165.547 
-                                    130.807 187.559 100.226 186.353C69.6454 185.297 41.0228 161.023 21.7403 129.362C2.45775 
-                                    97.8511 -7.48481 59.1033 6.67581 34.5279C20.9871 10.1032 59.7028 -0.149132 97.9666 
-                                    0.00163737C136.23 0.303176 174.193 10.857 190.312 36.4879Z"/>
-                                </mask>
-                                <g mask="url(#mask0)">
-                                    <path d="M190.312 36.4879C206.582 62.1187 201.309 102.826 182.328 134.186C163.346 
-                                    165.547 130.807 187.559 100.226 186.353C69.6454 185.297 41.0228 161.023 21.7403 
-                                    129.362C2.45775 97.8511 -7.48481 59.1033 6.67581 34.5279C20.9871 10.1032 59.7028 
-                                    -0.149132 97.9666 0.00163737C136.23 0.303176 174.193 10.857 190.312 36.4879Z"/>
-                                    <image class="home__blob-img" x='20' y="" xlink:href="assets/img/portrait.png"/>
-                                </g>
-                            </svg>
-
-                        </div>
-                        <div class="home__data">
-                            <h1 class="home__title">Hi, I'm Anup</h1>
-                            <h3 class="home__subtitle">Software Developer</h3>
-                            <p class="home__description">I am a software developer with 2 years of experience in developing web applications. I have worked on various technologies like PHP, Laravel, Codeigniter, MySQL, HTML, CSS, JavaScript, jQuery, Bootstrap, etc.</p>
-                            <a href="#contact" class="button button--flex home__button">
-                                Contact Me <i class="uil uil-message button__icon"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class = "home__scroll">
-                        <a href="#about" class="home__scroll-button button--flex">
-                            <i class="uil uil-mouse-alt home__scroll-mouse"></i>
-                            <span class="home__scroll-name">Scroll down</span>
-                            <i class="uil uil-arrow-down home__scroll-arrow"></i>
-                        </a>
-                    </div>
-                </div>
-            </section>
-
-            <!--==================== ABOUT ====================-->
-            <section class="about section" id="about">
-                <h2 class="section__title">About Me</h2>
-                <span class="section__subtitle">My Introduction</span>
-
-
-                <div class="about__container container grid">
-                    <img src="assets/img/about.jpg" alt="" class="about__img">
-
-                    <div class="about__data">
-                        <p class="about__description">High performing and adaptable software engineer with professional experience with DevOps and the Agile development methodology.
-                            Experience in working with product development for startups and collaborating with multiple geographic teams to develop and deliver high-quality 
-                            E2E software solutions.</p>
-
-                            <div class="about__info">
-                                <div>
-                                    <span class="about__info-title">1+</span>
-                                    <spam class="about__info-name">Years <br> experience</spam>
-                                </div>
-
-                                <div>
-                                    <span class="about__info-title">10+</span>
-                                    <spam class="about__info-name">Completed <br> projects</spam>
-                                </div>
-
-                                <div>
-                                    <span class="about__info-title">2+</span>
-                                    <spam class="about__info-name">Companies <br> worked</spam>
-                                </div>
-
-                                <dic class="about__buttons">
-                                    <a dwonlaod="" href="assets/pdf/Anup-Cv.pdf" class="button button--flex about__button">
-                                        Download CV <i class="uil uil-file-download-alt button__icon"></i>
-                                    </a>
-                                </dic>
-                            </div>
-                    </div>
-                </div>
-            </section>
-
-            <!--==================== SKILLS ====================-->
-            <section class="skills section" id="skills">
-                <h2 class="section__title">Skills</h2>
-                <span class="section__subtitle">My technical expertise</span>
-                
-                <div class="skills__container container grid">
-                    <div>
-                        <!--==================== SKILLS 1 ====================-->
-                        <div class="skills__content">
-                            <div class="skills__header">
-                                <i class="uil uil-brackets-curly skills__icon"></i>
-
-                                <div>
-                                    <h1 class="skills__title">Frontend developer</h1>
-                                    <span class="skills__subtitle">More than 4 years</span>
-                                </div>
-
-                                <i class="uil uil-angle-down skills__arrow"></i>
-                            </div>
-
-                            <div class="skills__list grid">
-                                <div class="skills__data">
-                                    <div class="skills__title">
-                                        <h3 class="skills__name">Python</h3>
-                                        <span class="skills__number">90%</span>
-                                    </div>
-                                    <div class="skills__bar">
-                                        <span class="skills__percentage skills__python"></span>
-                                    </div>
-                                </div>
-
-                                <div class="skills__data">
-                                    <div class="skills__title">
-                                        <h3 class="skills__name">C++</h3>
-                                        <span class="skills__number">80%</span>
-                                    </div>
-                                    <div class="skills__bar">
-                                        <span class="skills__percentage skills__c++"></span>
-                                    </div>
-                                </div>
-
-                                <div class="skills__data">
-                                    <div class="skills__title">
-                                        <h3 class="skills__name">JavaScript</h3>
-                                        <span class="skills__number">90%</span>
-                                    </div>
-                                    <div class="skills__bar">
-                                        <span class="skills__percentage skills__js"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!--==================== SKILLS 2 ====================-->
-                        <div class="skills__content">
-                            <div class="skills__header">
-                                <i class="uil uil-brackets-curly skills__icon"></i>
-
-                                <div>
-                                    <h1 class="skills__title">Frontend developer</h1>
-                                    <span class="skills__subtitle">More than 4 years</span>
-                                </div>
-
-                                <i class="uil uil-angle-down skills__arrow"></i>
-                            </div>
-
-                            <div class="skills__list grid">
-                                <div class="skills__data">
-                                    <div class="skills__title">
-                                        <h3 class="skills__name">Python</h3>
-                                        <span class="skills__number">90%</span>
-                                    </div>
-                                    <div class="skills__bar">
-                                        <span class="skills__percentage skills__python"></span>
-                                    </div>
-                                </div>
-
-                                <div class="skills__data">
-                                    <div class="skills__title">
-                                        <h3 class="skills__name">C++</h3>
-                                        <span class="skills__number">80%</span>
-                                    </div>
-                                    <div class="skills__bar">
-                                        <span class="skills__percentage skills__c++"></span>
-                                    </div>
-                                </div>
-
-                                <div class="skills__data">
-                                    <div class="skills__title">
-                                        <h3 class="skills__name">JavaScript</h3>
-                                        <span class="skills__number">90%</span>
-                                    </div>
-                                    <div class="skills__bar">
-                                        <span class="skills__percentage skills__js"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </section>
-
-            <!--==================== QUALIFICATION ====================-->
-            <section class="timeline section">
-                <h2 class="section__title">Timeline</h2>
-                <span class="section__subtitle">My personal journey</span>
-
-                <div class="timeline container">
-                    <div class="timeline__tabs">
-                        <div class="timeline__button button--flex timeline__active" data-target='#education'>
-                            <i class="uil uil-graduation-cap timeline__icon"></i>
-                            Education
-                        </div>
-
-                        <div class="timeline__button button--flex" data-target='#work'>
-                            <i class="uil uil-briefcase-alt timeline__icon"></i>
-                            Work
-                    </div>
-                    <div class="timeline__sections">
-                        <!--==================== TIMELINE EDUCATION ====================-->
-                        <div class="timeline__content timeline__active" data-content id="education">
-                            <!--==================== QUALIFICATION 1 ====================-->
-                            <div class="timeline__data">
-                                <div>
-                                    <h3 class="timeline__title">Mathematics and Computer Science</h3>
-                                    <span class="timeline__subtitle">University of Illinois at Urbana-Champaign</span>
-                                    <div class="timeline__calendar">
-                                        <i class="uil uil-calendar-alt"></i>
-                                        August 2018 - May 2022
-                                    </div>
-                                </div>
-                                
-                                <div>
-                                    <span class="timeline__rounder"></span>
-                                    <!-- <span class="timeline__line"></span> -->
-                                </div>
-                                
-                            </div>
-                        </div>
-
-                        <!--==================== TIMELINE WORK ====================-->
-                        <div class="timeline__content" data-content id="work">
-                            <!--==================== QUALIFICATION 1 ====================-->
-                            <div class="timeline__data">
-                                <div>
-                                    <h3 class="timeline__title">Programming Instructor</h3>
-                                    <span class="timeline__subtitle">Codakid</span>
-                                    <div class="timeline__calendar">
-                                        <i class="uil uil-calendar-alt"></i>
-                                        April 2021 - April 2022
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <span class="timeline__rounder"></span>
-                                    <span class="timeline__line"></span>
-                                </div>
-                            </div>
-
-                            <!--==================== QUALIFICATION 2 ====================-->
-                            <div class="timeline__data">
-                                <div>
-                                    <h3 class="timeline__title">DevOps Engineer</h3>
-                                    <span class="timeline__subtitle">Tusimple</span>
-                                    <div class="timeline__calendar">
-                                        <i class="uil uil-calendar-alt"></i>
-                                        August 2022 - August 2023
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <span class="timeline__rounder"></span>
-                                    <!-- <span class="timeline__line"></span> -->
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!--==================== SERVICES ====================-->
-            <section class="services section" id="services">
-                <h2 class="section__title">Services</h2>
-                <span class="section__subtitle">What I offer</span>
-
-                <div class="services__container container grid">
-                    <!--==================== SERVICES 1 ====================-->
-                    <div class="services__content">
-                        <div>
-                            <i class="uil uil-web-grid services__icon"></i>
-                            <h3 class="services__title">Frontend <br> development</h3>
-                        </div>
-
-                        <span class="button button--flex button--small button--link services__button">
-                            View More
-                            <i class="uil uil-arrow-right button__icon"></i>
-                        </span>
-
-                        <div class="services__modal">
-                            <div class="services__modal-content">
-                                <h4 class="services__modal-title"> Frontend <br> Developer </h4>
-                                <i class="uil uil-times services__modal-close"></i>
-
-                                <u1 class="services__modal-services grid">
-                                    <li class="services__modal-service">
-                                        <i class="uil uil-check-circle services__modal-icon"></i>
-                                        <p>Creating and Mantaininfg CI/CD pipelines</p>
-                                    </li>
-
-                                    <li class="services__modal-service">
-                                        <i class="uil uil-check-circle services__modal-icon"></i>
-                                        <p>Design the User Interface</p>
-                                    </li>
-
-                                    <li class="services__modal-service">
-                                        <i class="uil uil-check-circle services__modal-icon"></i>
-                                        <p>Research and improve on UI/UX</p>
-                                    </li>
-
-                                    <li class="services__modal-service">
-                                        <i class="uil uil-check-circle services__modal-icon"></i>
-                                        <p>Design and Implement ML algorithms</p>
-                                    </li>
-                                </u1>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!--==================== SERVICES 2 ====================-->
-                    <div class="services__content">
-                        <div>
-                            <i class="uil uil-code-branch services__icon"></i>
-                            <h3 class="services__title">DevOps <br> Engineer</h3>
-                        </div>
-
-                        <span class="button button--flex button--small button--link services__button">
-                            View More
-                            <i class="uil uil-arrow-right button__icon"></i>
-                        </span>
-
-                        <div class="services__modal">
-                            <div class="services__modal-content">
-                                <h4 class="services__modal-title"> Software <br> Developer </h4>
-                                <i class="uil uil-times services__modal-close"></i>
-
-                                <u1 class="services__modal-services grid">
-                                    <li class="services__modal-service">
-                                        <i class="uil uil-check-circle services__modal-icon"></i>
-                                        <p>Creating and Mantaininfg CI/CD pipelines</p>
-                                    </li>
-
-                                    <li class="services__modal-service">
-                                        <i class="uil uil-check-circle services__modal-icon"></i>
-                                        <p>Design the User Interface</p>
-                                    </li>
-
-                                    <li class="services__modal-service">
-                                        <i class="uil uil-check-circle services__modal-icon"></i>
-                                        <p>Research and improve on UI/UX</p>
-                                    </li>
-
-                                    <li class="services__modal-service">
-                                        <i class="uil uil-check-circle services__modal-icon"></i>
-                                        <p>Design and Implement ML algorithms</p>
-                                    </li>
-                                </u1>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!--==================== PORTFOLIO ====================-->
-            <section class="portfolio section" id="portfolio">
-                <h2 class="section__title">Portfolio</h2>
-                <span class="section__subtitle">Most recent work</span>
-
-                <div class="portfolio__container container swiper-container">
-                    <div class="swiper-wrapper">
-                        <!--==================== PORTFOLIO ITEM 1====================-->
-                        <div class="portfolio__content grid swiper-slide">
-                            <img src="assets/img/portfolio1.jpg" alt="" class="portfolio__img">
-
-                            <div class="portfolio__data">
-                                <h3 class="portfolio__title">Modern Websites</h3>
-                                <p class="portfolio__description">All teh shiz I ahve worked on in the last years of my life.</p>
-                                <a href="#" class="button button--flex button--small portfolio__button">
-                                    Demo
-                                    <i class="uil uil-arrow-right button__icon"></i>
-                                </a>
-                            </div>
-                        </div>
-
-                        <!--==================== PORTFOLIO ITEM 2====================-->
-                        <div class="portfolio__content grid swiper-slide">
-                            <img src="assets/img/portfolio2.jpg" alt="" class="portfolio__img">
-
-                            <div class="portfolio__data">
-                                <h3 class="portfolio__title">Brand Design</h3>
-                                <p class="portfolio__description">All teh shiz I ahve worked on in the last years of my life.</p>
-                                <a href="#" class="button button--flex button--small portfolio__button">
-                                    Demo
-                                    <i class="uil uil-arrow-right button__icon"></i>
-                                </a>
-                            </div>
-                        </div>
-
-                        <!--==================== PORTFOLIO ITEM 3====================-->
-                        <div class="portfolio__content grid swiper-slide">
-                            <img src="assets/img/portfolio3.jpg" alt="" class="portfolio__img">
-
-                            <div class="portfolio__data">
-                                <h3 class="portfolio__title">Online Store</h3>
-                                <p class="portfolio__description">All teh shiz I ahve worked on in the last years of my life.</p>
-                                <a href="#" class="button button--flex button--small portfolio__button">
-                                    Demo
-                                    <i class="uil uil-arrow-right button__icon"></i>
-                                </a>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <!-- Add Arrows -->
-                    <div class="swiper-button-next">
-                        <i class="uil uil-angle-right-b swiper-portfolio-icon"></i>
-                    </div>
-                    <div class="swiper-button-prev">
-                        <i class="uil uil-angle-left-b swiper-portfolio-icon"></i>
-                    </div>
-
-                    <!-- Add Pagination -->
-                    <div class="swiper-pagination"></div>
-
-                </div>
-            </section>
-
-            <!--==================== PROJECT IN MIND ====================-->
-            <section class="project section">
-
-            </section>
-
-            <!--==================== TESTIMONIAL ====================-->
-            <section class="testimonial section">
-                
-            </section>
-
-            <!--==================== CONTACT ME ====================-->
-            <section class="contact section" id="contact">
-                <h2 class="section__title">Contact Me</h2>
-                <span class="section__subtitle">Get in touch</span>
-
-                <div class="contact__container container grid">
-                    <div>
-                        <div class="contact__information">
-                            <i class="uil uil-phone contact__icon"></i>
-
-                            <div>
-                                <h3 class="contact__title">Call Me, Beep Me</h3>
-                                <span class="contact__subtitle">847-409-6211</span>
-                            </div>
-                        </div>
-
-                        <div class="contact__information">
-                            <i class="uil uil-envelope contact__icon"></i>
-
-                            <div>
-                                <h3 class="contact__title">Email Me</h3>
-                                <span class="contact__subtitle">anup2230@gmail.com</span>
-                            </div>
-                        </div>
-
-                        <div class="contact__information">
-                            <i class="uil uil-map-marker contact__icon"></i>
-
-                            <div>
-                                <h3 class="contact__title">Location</h3>
-                                <span class="contact__subtitle">Chicago - Illinois</span>
-                            </div>
-                        </div>
-                    </div>
-                    <form action="send-email.php" method="POST" class="contact__form grid">
-                        <div class="contact__inputs grid">
-                            <div class="contact__content">
-                                <label for="" class="contact__label">Name</label>
-                                <input type="text" class="contact__input" name="name">
-                            </div>
-
-                            <div class="contact__content">
-                                <label for="" class="contact__label">Email</label>
-                                <input type="email" class="contact__input" name="email">
-                            </div>
-                        </div>
-                        <div class="contact__content">
-                            <label for="" class="contact__label">Subject</label>
-                            <input type="text" class="contact__input" name="subject">
-                        </div>
-
-                        <div class="contact__content">
-                            <label for="" class="contact__label">Message</label>
-                            <textarea name="" id="" cols="0" rows="7" class="contact__input" name="message"></textarea>
-                        </div>
-
-                        <div>
-                            <button type="submit" class="button button--flex">
-                                Send Message
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </section>
-        </main>
-
-        <!--==================== FOOTER ====================-->
-        <footer class="footer">
-         
-        </footer>
-        
-        <!--==================== SCROLL TOP ====================-->
-        
-
-        <!--==================== SWIPER JS ====================-->
-        <script src="/assets/js/swiper-bundle.min.js"></script>
-
-        <!--==================== MAIN JS ====================-->
-        <script src="assets/js/main.js"></script>
-    </body>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anup Patel</title>
+<meta name="description" content="Anup Patel is a cloud and DevOps engineer in Chicago who designs AWS infrastructure and the pipelines that deploy to it.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800;900&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --white:#F6F8FC; --soft:#C9D3E6; --glass:rgba(7,13,34,.46); --edge:rgba(255,255,255,.16);
+  --sun:#FFC27A; --signal:#FF5A4E;
+  --display:'Big Shoulders Display',Impact,sans-serif;
+  --body:'Hanken Grotesk',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;background:#02030a}
+body{font-family:var(--body);color:var(--white);font-size:1.0625rem;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--sun);outline-offset:3px;border-radius:4px}
+#sky{position:fixed;inset:0;width:100%;height:100lvh;display:block;z-index:0}
+
+/* ---------- HUD: altitude + position ---------- */
+.hud{
+  background:rgba(7,13,34,.42);border:1px solid var(--edge);border-radius:14px;padding:.8rem 1rem;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  position:fixed;left:clamp(1rem,3vw,2.25rem);bottom:clamp(1rem,3vw,2rem);z-index:5;
+  font-variant-numeric:tabular-nums;text-shadow:0 1px 8px rgba(0,0,0,.45);pointer-events:none
+}
+.hud__label{font-size:.78rem;color:var(--soft);letter-spacing:.02em}
+.hud__alt{font-family:var(--display);font-weight:800;font-size:clamp(2.2rem,4vw,3.2rem);line-height:1}
+.hud__where{font-weight:600;margin-top:.35rem}
+.hud__coords{font-size:.8rem;color:var(--soft)}
+
+/* ---------- gauge: section nav ---------- */
+.gauge{position:fixed;right:clamp(1rem,2.5vw,2rem);top:50%;transform:translateY(-50%);z-index:5;background:rgba(7,13,34,.36);border:1px solid var(--edge);border-radius:14px;padding:1rem .9rem 1rem 1.1rem;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.gauge ol{list-style:none;position:relative;display:flex;flex-direction:column;gap:2.4rem;padding-right:1.25rem;border-right:1px solid rgba(255,255,255,.35)}
+.gauge a{display:block;text-align:right;font-size:.82rem;text-decoration:none;color:var(--soft);text-shadow:0 1px 6px rgba(0,0,0,.5);position:relative;transition:color .3s}
+.gauge a::after{content:"";position:absolute;right:-1.25rem;top:50%;width:.55rem;height:1px;background:rgba(255,255,255,.55)}
+.gauge a.on{color:var(--white);font-weight:600}
+.gauge__dot{position:absolute;right:calc(.9rem - 5px);top:1rem;width:9px;height:9px;border-radius:50%;background:var(--sun);box-shadow:0 0 0 4px rgba(255,194,122,.25),0 0 14px var(--sun)}
+
+/* ---------- content ---------- */
+main{position:relative;z-index:2}
+.stop{min-height:150vh;display:flex;align-items:center;padding:12vh 14rem 12vh 13rem}
+.stop--right{justify-content:flex-end}
+.panel{
+  width:min(36rem,100%);background:var(--glass);border:1px solid var(--edge);border-radius:20px;
+  padding:clamp(1.4rem,3.5vw,2.4rem);backdrop-filter:blur(16px) saturate(1.25);-webkit-backdrop-filter:blur(16px) saturate(1.25);
+  box-shadow:0 30px 80px -40px rgba(0,0,0,.6)
+}
+.panel--wide{width:min(46rem,100%)}
+h2{font-family:var(--display);font-weight:800;font-size:clamp(2.6rem,6vw,4.4rem);line-height:.92;letter-spacing:.005em;text-transform:uppercase}
+.meta{color:var(--soft);margin:.5rem 0 1.4rem}
+.panel p+p{margin-top:1rem}
+.panel ul{list-style:none;display:grid;gap:.55rem;margin-top:1.4rem}
+.panel li{position:relative;padding-left:1.1rem;color:#E4EAF5}
+.panel li::before{content:"";position:absolute;left:0;top:.7em;width:5px;height:5px;border-radius:50%;background:var(--sun)}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:1.1rem 1.5rem;padding:1.25rem 0;border-block:1px solid var(--edge)}
+.stat b{display:block;font-family:var(--display);font-weight:800;font-size:clamp(2.6rem,5vw,3.6rem);line-height:.95;color:var(--sun)}
+.stat span{font-size:.92rem;color:var(--soft);line-height:1.35;display:block;max-width:22ch}
+
+/* hero */
+.hero{min-height:120vh;flex-direction:column;justify-content:center;align-items:flex-start;padding-top:0}
+.name{font-family:var(--display);font-weight:900;text-transform:uppercase;font-size:clamp(5rem,17vw,15.5rem);line-height:.8;letter-spacing:.01em;text-shadow:0 0 60px rgba(120,160,255,.25)}
+.lede{font-size:clamp(1.15rem,2vw,1.45rem);max-width:32ch;margin-top:1.75rem;color:#E1E8F5}
+.cue{margin-top:3rem;display:flex;align-items:center;gap:.7rem;color:var(--soft);font-size:.95rem}
+.cue i{width:1px;height:46px;background:linear-gradient(var(--white),transparent);animation:cue 2.2s ease-in-out infinite}
+@keyframes cue{0%{transform:scaleY(.2);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}100%{transform:scaleY(.2);transform-origin:bottom}}
+
+.certs{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.5rem}
+.certs span{padding:.4rem .8rem;border-radius:999px;border:1px solid var(--edge);background:rgba(255,255,255,.06);font-size:.9rem;font-weight:500}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.6rem}
+.chips span{padding:.28rem .65rem;border-radius:6px;background:rgba(255,255,255,.08);font-size:.88rem}
+.group+.group{margin-top:1.1rem}
+.group h3{font-size:.95rem;font-weight:600;color:var(--soft)}
+.edu{padding-bottom:1.3rem;margin-bottom:1.3rem;border-bottom:1px solid var(--edge)}
+
+.life{display:grid;grid-template-columns:1.35fr 1fr;gap:1.5rem;align-items:start}
+.life p+p{margin-top:1rem}
+.life__photo img{display:block;width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;object-position:50% 20%;border-radius:12px}
+.life__photo figcaption{font-size:.82rem;color:var(--soft);margin-top:.45rem}
+.projects{display:grid;gap:1rem;margin-top:1.25rem}
+.projects h3{font-family:var(--display);font-weight:700;font-size:1.45rem;line-height:1.1;letter-spacing:.01em}
+.projects p{color:var(--soft);font-size:.97rem}
+
+/* landing */
+.land{flex-direction:column;justify-content:flex-end;align-items:flex-start;min-height:165vh;padding-bottom:16vh}
+.land h2{font-size:clamp(3.4rem,10vw,8.5rem);text-shadow:0 4px 40px rgba(0,0,0,.5)}
+.mail{display:inline-block;font-family:var(--display);font-weight:700;font-size:clamp(1.9rem,5vw,3.8rem);text-decoration:none;margin-top:1rem;border-bottom:2px solid var(--sun);line-height:1.1}
+.links{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.75rem}
+.btn{padding:.7rem 1.15rem;border-radius:999px;text-decoration:none;font-weight:600;border:1px solid rgba(255,255,255,.4);background:rgba(7,13,34,.5);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.btn:hover{background:rgba(255,255,255,.14)}
+.btn--solid{background:var(--white);color:#0A1230;border-color:var(--white)}
+.btn--solid:hover{background:#fff}
+footer{position:relative;z-index:2;padding:0 clamp(1.25rem,6vw,7rem) 2.5rem;color:var(--soft);font-size:.9rem}
+
+@media (max-width:1180px) and (min-width:901px){
+  .stop{padding-inline:12rem 12.5rem}
+  .hud__coords{display:none}
+}
+@media (max-width:900px){
+  .gauge{display:none}
+  .stop,.stop--right{justify-content:flex-start;padding-inline:1.1rem}
+  .hud{padding:.5rem .7rem}
+  .hud{left:.75rem;right:auto;bottom:.75rem;display:flex;align-items:baseline;gap:.6rem}
+  .hud__label{display:none}
+  .hud__alt{font-size:1.4rem}
+  .hud__where{margin:0;font-size:.85rem}
+  .hud__coords{display:none}
+}
+@media (max-width:640px){ .life{grid-template-columns:1fr} .life__photo{max-width:320px} }
+@media (max-width:480px){ .stats{grid-template-columns:1fr} }
+@media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} .cue i{animation:none} }
+</style>
+</head>
+<body>
+<canvas id="sky" aria-hidden="true"></canvas>
+
+<div class="hud" aria-hidden="true">
+  <div class="hud__label">Altitude</div>
+  <div class="hud__alt" id="alt">408 km</div>
+  <div class="hud__where" id="where">Low Earth orbit</div>
+  <div class="hud__coords" id="coords">32.22° N 110.97° W</div>
+</div>
+
+<nav class="gauge" aria-label="Sections">
+  <ol>
+    <li><a href="#orbit">Orbit</a></li>
+    <li><a href="#clarity">Above the clouds</a></li>
+    <li><a href="#gms">Cloud layer</a></li>
+    <li><a href="#tusimple">Arizona</a></li>
+    <li><a href="#offclock">Rockies</a></li>
+    <li><a href="#illinois">Illinois</a></li>
+    <li><a href="#chicago">Chicago</a></li>
+  </ol>
+  <span class="gauge__dot" id="dot"></span>
+</nav>
+
+<main>
+  <section class="stop hero" id="orbit" data-p="0.02">
+    <h1 class="name">Anup<br>Patel</h1>
+    <p class="lede">Cloud and DevOps engineer in Chicago. I design AWS infrastructure and build the pipelines that ship software to it.</p>
+    <p class="cue"><i></i>Scroll to come back down to Earth</p>
+  </section>
+
+  <section class="stop stop--right" id="about" data-p="0.17">
+    <div class="panel">
+      <h2>About</h2>
+      <p class="meta">Solutions engineer at Clarity Partners</p>
+      <p>I spend my days in the cloud: designing AWS architectures for client projects, automating how they're deployed, and working out where AI services like Bedrock and Textract actually pay off.</p>
+      <p>Before that I kept a fleet of self-driving trucks ready to roll at TuSimple.</p>
+      <div class="certs" aria-label="Certifications">
+        <span>AWS Certified Solutions Architect</span>
+        <span>Google Cloud Professional Cloud Architect</span>
+        <span>CompTIA Network+</span>
+        <span>CompTIA A+</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="stop" id="clarity" data-p="0.32">
+    <div class="panel panel--wide">
+      <h2>Clarity Partners</h2>
+      <p class="meta">Solutions engineer. Chicago, January 2024 to now</p>
+      <div class="stats">
+        <div class="stat"><b>90%</b><span>less time to stand up a new environment, with Terraform and GitLab</span></div>
+        <div class="stat"><b>50%</b><span>faster deploys after moving Spring Boot services to ECS</span></div>
+        <div class="stat"><b>30%</b><span>better ticket routing and resolution with Comprehend and Bedrock</span></div>
+        <div class="stat"><b>25%</b><span>lower storage costs from an S3, RDS and EFS data audit</span></div>
+      </div>
+      <ul>
+        <li>Architect AWS solutions for new client projects, from requirements and user stories through to diagrams both engineers and executives can follow.</li>
+        <li>Build CI/CD in GitLab and Jenkins, plus infrastructure-as-code pipelines with role-based deployments for developer testing.</li>
+        <li>Write cost analyses for client AI use cases on AWS so teams can decide with real numbers.</li>
+        <li>Watch production and plan for surges: autoscaling schedules, bot control, and automated SSL renewals that kept secure sites at 100% uptime.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="stop" id="gms" data-p="0.47">
+    <div class="panel">
+      <h2>Global Mobility Services</h2>
+      <p class="meta">Software engineer. Schaumburg, IL, September 2023 to January 2024</p>
+      <div class="stats">
+        <div class="stat"><b>70%</b><span>less manual testing after adding Selenium to CI/CD</span></div>
+        <div class="stat"><b>90%</b><span>faster insurance claims with a Chrome extension for a dental group</span></div>
+      </div>
+      <ul>
+        <li>Built a React app that lets clients manage and deploy Terraform to AWS, Azure and GCP from one place.</li>
+        <li>Wrote a CloudFormation template that spins up MLflow for fast ML experiments.</li>
+        <li>Set up monitoring, alerts and backup policies to keep client systems available.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="stop stop--right" id="tusimple" data-p="0.62">
+    <div class="panel">
+      <h2>TuSimple</h2>
+      <p class="meta">Software engineer, DevOps. Tucson, AZ, August 2022 to August 2023</p>
+      <div class="stats">
+        <div class="stat"><b>90%</b><span>faster to clear an autonomous truck for testing, with a Jenkins, Cypress and Python pipeline</span></div>
+        <div class="stat"><b>50+</b><span>stakeholders kept in the loop on service-level objectives</span></div>
+      </div>
+      <ul>
+        <li>Built the internal app the company used to track every vehicle's hardware and software and schedule fleet updates.</li>
+        <li>Shipped validated Docker images to the fleet and provisioned machines with Ansible and Ansible Tower.</li>
+        <li>Led weekly root-cause reviews for the autonomous vehicle help desk and wrote the Python and Bash toolkit they used to fix issues.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="stop" id="offclock" data-p="0.72">
+    <div class="panel panel--wide">
+      <h2>Off the clock</h2>
+      <p class="meta">Where I am when I'm not at a terminal</p>
+      <div class="life">
+        <div>
+          <p>In 2026 I finished my first triathlon: the Olympic distance at SuperTri Chicago, a 1.5 km swim, 40 km bike and 10 km run.</p>
+          <p>Now I'm training for the Red Hot Moab 50-mile ultramarathon, through the red-rock desert around Moab, Utah.</p>
+          <p>If there's snow anywhere within reach, I'm on a snowboard. When it melts I trade the board for hiking boots. I'm also a foodie who travels to eat, so most trips get planned around the meals.</p>
+        </div>
+        <figure class="life__photo">
+          <img src="assets/img/triathlon-2026.webp" alt="Anup on his road bike in a neon yellow tri suit during SuperTri Chicago" width="556" height="1000" loading="lazy">
+          <figcaption>Bike leg, SuperTri Chicago 2026</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="stop stop--right" id="illinois" data-p="0.815">
+    <div class="panel">
+      <div class="edu">
+        <h2>Illinois</h2>
+        <p class="meta" style="margin-bottom:.6rem">University of Illinois Urbana-Champaign. Mathematics and Computer Science, 2018 to 2022</p>
+        <p>Data structures, database systems, machine learning, graph theory, linear algebra, numerical analysis, probability and statistics.</p>
+      </div>
+      <div class="group"><h3>Cloud and infrastructure</h3><div class="chips"><span>AWS</span><span>Google Cloud</span><span>Azure</span><span>Terraform</span><span>Docker</span><span>Kubernetes</span><span>Ansible</span><span>Puppet</span><span>Prometheus</span><span>Linux</span></div></div>
+      <div class="group"><h3>Pipelines and testing</h3><div class="chips"><span>GitLab CI</span><span>Jenkins</span><span>Artifactory</span><span>Cypress</span><span>Selenium</span><span>PyTest</span></div></div>
+      <div class="group"><h3>Languages and frameworks</h3><div class="chips"><span>Python</span><span>JavaScript</span><span>Java</span><span>C#</span><span>C/C++</span><span>Swift</span><span>SQL</span><span>React</span><span>React Native</span><span>Node.js</span><span>Next.js</span><span>Three.js</span></div></div>
+      <div class="group"><h3>Machine learning</h3><div class="chips"><span>PyTorch</span><span>TensorFlow</span><span>Keras</span><span>Pandas</span><span>SageMaker</span><span>Bedrock</span><span>MLflow</span></div></div>
+    </div>
+  </section>
+
+  <section class="stop" id="projects" data-p="0.89">
+    <div class="panel">
+      <h2>Side projects</h2>
+      <div class="projects">
+        <div><h3>Trauma support chatbot</h3><p>A React Native app with a private Gemini-powered chatbot, backed by a Node API and Firebase.</p></div>
+        <div><h3>Personal voice generator</h3><p>Clones a voice with tortoise-tts on Replicate and reads any text back in it.</p></div>
+        <div><h3>Stock and crypto signals</h3><p>A PyTorch CNN that reads price charts for 500 tickers and calls buy or sell.</p></div>
+        <div><h3>Ticket finder bot</h3><p>A Discord bot on an Azure VM that grabs tickets the moment they match.</p></div>
+      </div>
+      <div class="links"><a class="btn" href="https://github.com/anup2230">See the code on GitHub</a></div>
+    </div>
+  </section>
+
+  <section class="stop land" id="chicago" data-p="0.985">
+    <h2>Landed in Chicago</h2>
+    <p class="lede">Have a cloud project or a team that needs to ship faster? Write to me.</p>
+    <a class="mail" href="mailto:anup2230@gmail.com">anup2230@gmail.com</a>
+    <div class="links">
+      <a class="btn btn--solid" href="https://anup2230.github.io/assets/pdf/Anup_Patel_Resume_2026.pdf">Résumé (PDF)</a>
+      <a class="btn" href="https://www.linkedin.com/in/anup-patel2230/">LinkedIn</a>
+      <a class="btn" href="https://github.com/anup2230">GitHub</a>
+    </div>
+  </section>
+</main>
+<footer>© 2026 Anup Patel. Drawn live in your browser, no images were harmed.</footer>
+
+<script>
+(() => {
+'use strict';
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const cv = document.getElementById('sky'), ctx = cv.getContext('2d');
+let W = 0, H = 0, DPR = 1;
+
+/* ---------- helpers ---------- */
+const clamp = (v, a = 0, b = 1) => v < a ? a : v > b ? b : v;
+const lerp = (a, b, t) => a + (b - a) * t;
+const smooth = (a, b, x) => { const t = clamp((x - a) / (b - a)); return t * t * (3 - 2 * t); };
+function rng(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const hash = i => { let x = Math.sin(i * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+const vnoise = x => { const i = Math.floor(x), f = x - i, u = f * f * (3 - 2 * f); return lerp(hash(i), hash(i + 1), u); };
+const hex = h => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
+const mix = (a, b, t) => a.map((v, i) => v + (b[i] - v) * t);
+const css = (c, a = 1) => `rgba(${c[0] | 0},${c[1] | 0},${c[2] | 0},${a})`;
+function keyed(frames, p) { // frames: [[p, ...hexes]]
+  let i = 0; while (i < frames.length - 2 && p > frames[i + 1][0]) i++;
+  const [p0, ...a] = frames[i], [p1, ...b] = frames[i + 1];
+  const t = smooth(p0, p1, p);
+  return a.map((h, k) => mix(hex(h), hex(b[k]), t));
+}
+function keyNum(frames, p) {
+  let i = 0; while (i < frames.length - 2 && p > frames[i + 1][0]) i++;
+  const [p0, a] = frames[i], [p1, b] = frames[i + 1];
+  return lerp(a, b, smooth(p0, p1, p));
+}
+
+/* ---------- palettes keyed to scene progress ---------- */
+const SKY = [ // top, middle, horizon
+  [0.00, '#010208', '#03050f', '#081236'],
+  [0.10, '#02040e', '#050b1e', '#0d1d4c'],
+  [0.21, '#081a40', '#244a8c', '#f4a66e'],
+  [0.30, '#1c5bc2', '#5d9ae6', '#d4e8ff'],
+  [0.40, '#5d8ed2', '#a6c4e6', '#ebf2fb'],
+  [0.50, '#7da5d2', '#b8cfe5', '#e7edf4'],
+  [0.60, '#3b74c0', '#8ab4e0', '#ffd6a3'],
+  [0.665, '#35599e', '#c48c8f', '#ffb06e'],
+  [0.72, '#2a58a8', '#7ea6d9', '#ffd2a2'],
+  [0.76, '#2d4f96', '#9b8fb0', '#ffbe8a'],
+  [0.80, '#1f2b5a', '#6a5888', '#f08b62'],
+  [0.89, '#050919', '#0d1534', '#2a2f5a'],
+  [1.00, '#03061a', '#0a1130', '#1f2650'],
+];
+const LAND = [ // far, mid, near
+  [0.55, '#d8a07a', '#ad6443', '#603525'],
+  [0.64, '#c9856a', '#8e4f38', '#472a20'],
+  [0.672, '#8f9cc0', '#55648a', '#e4ebf6'],
+  [0.755, '#8b8fb6', '#515a80', '#dce3f1'],
+  [0.815, '#6d6a8e', '#3d4860', '#1d2a25'],
+  [0.89, '#232845', '#121830', '#090d1c'],
+  [1.00, '#1f2442', '#10162c', '#080b18'],
+];
+
+/* ---------- sprites ---------- */
+let stars = [], clouds = [], cloudSprites = [];
+function makeCloudSprite(seed) {
+  const r = rng(seed), c = document.createElement('canvas'); c.width = 420; c.height = 200;
+  const g = c.getContext('2d');
+  const puffs = 16 + (r() * 10 | 0);
+  for (let i = 0; i < puffs; i++) {
+    const x = 70 + r() * 280, y = 95 + (r() - .3) * 70 * Math.sin((x - 70) / 280 * Math.PI), rad = 34 + r() * 52;
+    const gr = g.createRadialGradient(x, y, 0, x, y, rad);
+    gr.addColorStop(0, 'rgba(255,255,255,.95)'); gr.addColorStop(.55, 'rgba(255,255,255,.75)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = gr; g.beginPath(); g.arc(x, y, rad, 0, Math.PI * 2); g.fill();
+  }
+  g.globalCompositeOperation = 'source-atop';
+  const sh = g.createLinearGradient(0, 40, 0, 190);
+  sh.addColorStop(0, 'rgba(255,255,255,0)'); sh.addColorStop(1, 'rgba(118,138,170,.55)');
+  g.fillStyle = sh; g.fillRect(0, 0, 420, 200);
+  return c;
+}
+function build() {
+  const r = rng(7);
+  stars = Array.from({length: 420}, () => ({x: r(), y: r(), s: r() < .9 ? r() * 1.1 + .3 : r() * 1.8 + 1, a: .4 + r() * .6, tw: r() * 6}));
+  cloudSprites = [1, 2, 3, 4, 5, 6].map(makeCloudSprite);
+  const rc = rng(21);
+  clouds = Array.from({length: 74}, () => ({
+    spr: cloudSprites[rc() * 6 | 0], x: rc() * 1.5 - .25, base: .32 + rc() * .42,
+    d: .3 + Math.pow(rc(), 1.6) * 1.5, drift: .3 + rc(), flip: rc() < .5
+  })).sort((a, b) => a.d - b.d);
+}
+
+function resize() {
+  DPR = Math.min(2, devicePixelRatio || 1);
+  W = cv.clientWidth; H = cv.clientHeight;
+  cv.width = W * DPR; cv.height = H * DPR;
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+}
+
+/* ---------- terrain ---------- */
+// Each layer scrolls at its own speed (f). r is the "region" coordinate, shared by all layers,
+// so Arizona -> Illinois -> Chicago changes over at the same moment on every layer.
+const REG = {mtnAt: 2.0, plainsAt: 3.25, cityAt: 4.55, blend: .3};
+const HILL = 2.25; // the snowboard run's summit (in r)
+const TOWER_A = 5.72, TOWER_B = 6.02; // positions of the two landmark towers (in r)
+function weights(r) {
+  const m = smooth(REG.mtnAt - REG.blend, REG.mtnAt + REG.blend, r);
+  const pl = smooth(REG.plainsAt - REG.blend, REG.plainsAt + REG.blend, r);
+  const c = smooth(REG.cityAt - REG.blend, REG.cityAt + REG.blend, r);
+  return [1 - m, Math.max(0, m - pl), Math.max(0, pl - c), c];
+}
+function buildingH(wx, scale, seedOff) {
+  const b = Math.floor(wx / 34), h = hash(b + seedOff);
+  if (h < .12) return 0;
+  return (.025 + Math.pow(h, 3) * .2) * H * scale;
+}
+function heightAt(layer, wx, f) {
+  const r = wx / (f * W);
+  const [wd, wm, wp, wc] = weights(r);
+  let h = 0;
+  if (layer === 0) { // far
+    if (wd) { const m = vnoise(wx / 230); h += wd * (smooth(.56, .6, m) * .1 * H + vnoise(wx / 70) * .012 * H + .012 * H); }
+    if (wm) { const m = 1 - Math.abs(2 * vnoise(wx / 170) - 1); h += wm * (Math.pow(m, 1.6) * .36 * H + vnoise(wx / 55) * .03 * H + .02 * H); }
+    if (wp) h += wp * (.01 * H * vnoise(wx / 380) + .004 * H);
+    if (wc) h += wc * buildingH(wx, .45, 400);
+  } else if (layer === 1) { // mid
+    if (wd) { const m = vnoise(wx / 150 + 40); h += wd * (smooth(.62, .66, m) * .055 * H + .006 * H); }
+    if (wm) { const m = 1 - Math.abs(2 * vnoise(wx / 110 + 20) - 1); h += wm * (Math.pow(m, 2) * .16 * H + .01 * H); }
+    if (wp) h += wp * (.007 * H * vnoise(wx / 160) + .003 * H);
+    if (wc) {
+      let bh = buildingH(wx, 1, 900);
+      const ta = Math.abs(r - TOWER_A) * f * W, tb = Math.abs(r - TOWER_B) * f * W;
+      if (ta < 26) bh = H * (ta < 10 ? .42 : ta < 18 ? .38 : .33);       // stepped tower
+      if (tb < 22) bh = H * (.36 - (tb / 22) * .03); // tapered tower
+      h += wc * bh;
+    }
+  } else if (wm) { // near: the snowboard run
+    const dx = wx - HILL * W;
+    const hill = dx < 0 ? Math.exp(-Math.pow(dx / (.14 * W), 2)) : 1 - smooth(0, 1.5 * W, dx);
+    h += wm * (hill * .34 * H + Math.sin(wx / 37) * .003 * H);
+  }
+  return h;
+}
+
+/* ---------- drawing ---------- */
+function drawSky(p, horizonY) {
+  const [top, mid, hor] = keyed(SKY, p);
+  const g = ctx.createLinearGradient(0, 0, 0, H);
+  g.addColorStop(0, css(top));
+  g.addColorStop(clamp(horizonY / H * .6), css(mid));
+  g.addColorStop(clamp(horizonY / H), css(hor));
+  g.addColorStop(1, css(hor));
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  return hor;
+}
+
+function drawStars(p, t) {
+  const a = (1 - smooth(.1, .22, p)) + smooth(.86, .95, p) * .55;
+  if (a <= .01) return;
+  ctx.fillStyle = '#fff';
+  for (const s of stars) {
+    const tw = reduce ? 1 : .75 + .25 * Math.sin(t / 900 + s.tw);
+    ctx.globalAlpha = a * s.a * tw;
+    ctx.fillRect(s.x * W, s.y * H * (p > .8 ? .55 : 1), s.s, s.s);
+  }
+  ctx.globalAlpha = 1;
+}
+
+function drawSun(p) {
+  const vis = smooth(.13, .2, p) * (1 - smooth(.8, .86, p));
+  if (vis <= 0) return;
+  const x = W * keyNum([[.15, .2], [.3, .74], [.62, .8], [.85, .86]], p);
+  const y = H * keyNum([[.15, .62], [.3, .2], [.5, .16], [.64, .4], [.82, .66]], p);
+  const warm = smooth(.55, .8, p) + (1 - smooth(.18, .28, p));
+  const core = mix([255, 252, 240], [255, 170, 90], clamp(warm));
+  const glow = ctx.createRadialGradient(x, y, 0, x, y, Math.max(W, H) * .45);
+  glow.addColorStop(0, css(core, .55 * vis)); glow.addColorStop(.12, css(core, .2 * vis)); glow.addColorStop(1, css(core, 0));
+  ctx.fillStyle = glow; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = css(core, vis); ctx.beginPath(); ctx.arc(x, y, Math.max(14, W * .018), 0, Math.PI * 2); ctx.fill();
+}
+
+function drawEarth(p) {
+  const a = 1 - smooth(.17, .25, p);
+  if (a <= 0) return;
+  const s = smooth(0, .22, p);
+  const R = W * lerp(1.15, 9, s * s), topY = H * lerp(.74, .6, s);
+  const cx = W * .5, cy = topY + R;
+  ctx.save(); ctx.globalAlpha = a;
+  // atmosphere glow
+  for (let i = 0; i < 3; i++) {
+    ctx.beginPath(); ctx.arc(cx, cy, R + 4 + i * 10, Math.PI, 0);
+    ctx.strokeStyle = `rgba(110,170,255,${.22 - i * .06})`; ctx.lineWidth = 10 + i * 14; ctx.stroke();
+  }
+  const g = ctx.createLinearGradient(0, topY, 0, H);
+  g.addColorStop(0, '#2f6fc4'); g.addColorStop(.06, '#123a7a'); g.addColorStop(.4, '#071c44'); g.addColorStop(1, '#03102a');
+  ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fill();
+  // cloud bands on the planet
+  ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.clip();
+  ctx.globalAlpha = a * .5;
+  for (let i = 0; i < 26; i++) {
+    const ang = -Math.PI / 2 + (hash(i) - .5) * Math.min(1.6, 2.6 * W / R);
+    const dd = R * (1 - hash(i + 50) * .02) ;
+    const x = cx + Math.cos(ang) * dd, y = cy + Math.sin(ang) * dd + 10 + hash(i + 9) * H * .25;
+    ctx.save(); ctx.translate(x, y); ctx.scale(1, .22);
+    const cg = ctx.createRadialGradient(0, 0, 0, 0, 0, 60 + hash(i + 3) * 160);
+    cg.addColorStop(0, 'rgba(240,246,255,.75)'); cg.addColorStop(1, 'rgba(240,246,255,0)');
+    ctx.fillStyle = cg; ctx.beginPath(); ctx.arc(0, 0, 60 + hash(i + 3) * 160, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+  }
+  ctx.restore();
+}
+
+function drawClouds(p, t, pass) {
+  const a = smooth(.19, .29, p) * (1 - smooth(.66, .78, p));
+  if (a <= 0) return;
+  const k = Math.max(.7, W / 1100);
+  for (const c of clouds) {
+    if ((pass === 'back') !== (c.d < 1.05)) continue;
+    const y = c.base * H - (p - .45) * 3.6 * c.d * H;
+    const w = 380 * c.d * k, h = w * 200 / 420;
+    if (y - h > H || y + h < 0) continue;
+    let x = ((c.x * W + (reduce ? 0 : t * .006 * c.drift * c.d)) % (W * 1.5 + w)) - w * .5;
+    ctx.globalAlpha = a * (c.d > 1.4 ? .75 : 1) * clamp(c.d * 1.2);
+    if (c.flip) { ctx.save(); ctx.translate(x + w, y); ctx.scale(-1, 1); ctx.drawImage(c.spr, 0, -h / 2, w, h); ctx.restore(); }
+    else ctx.drawImage(c.spr, x, y - h / 2, w, h);
+  }
+  ctx.globalAlpha = 1;
+}
+
+function drawFog(p) {
+  const a = smooth(.38, .46, p) * (1 - smooth(.5, .57, p));
+  if (a <= 0) return;
+  ctx.fillStyle = `rgba(232,238,245,${a * .82})`; ctx.fillRect(0, 0, W, H);
+}
+
+function camX(p) { return Math.max(0, p - .52) / .48 * 6.3 * W; }
+
+function drawLand(p) {
+  const show = smooth(.5, .6, p);
+  if (show <= 0) return;
+  const lift = (1 - show) * H * .5;
+  const horizon = H * .63 + lift;
+  const [cFar, cMid, cNear] = keyed(LAND, p);
+  const cx = camX(p);
+  const layers = [
+    {f: .28, base: horizon, col: cFar},
+    {f: .55, base: horizon + H * .055, col: cMid},
+    {f: 1, base: horizon + H * .19, col: cNear},
+  ];
+  layers.forEach((L, li) => {
+    const path = new Path2D(); path.moveTo(0, H);
+    for (let sx = 0; sx <= W + 3; sx += 3) {
+      const wx = (sx - W / 2) + cx * L.f;
+      path.lineTo(sx, L.base - heightAt(li, wx, L.f));
+    }
+    path.lineTo(W, H); path.closePath();
+    ctx.fillStyle = css(L.col); ctx.fill(path);
+    if (li < 2) snowcaps(L, li, path, cx, p);
+    if (li === 2) snowShade(L, path, cx);
+    if (li === 0) haze(L.base, p);
+    if (li === 1) { cityLights(L, p, cx); farmBuildings(L, cx); pines(L, cx); }
+    if (li === 2) { cacti(L, cx); fields(L, cx, p); }
+  });
+  truck(layers[2], p, cx);
+  rider(layers[2], p, cx);
+}
+
+function mtnWeightOnScreen(L, cx) { // how much of this layer on screen is mountains
+  const off = cx * L.f - W / 2;
+  return Math.max(weights(off / (L.f * W))[1], weights((off + W) / (L.f * W))[1], weights((off + W / 2) / (L.f * W))[1]);
+}
+function snowcaps(L, li, path, cx, p) {
+  if (mtnWeightOnScreen(L, cx) <= 0) return;
+  const off = cx * L.f - W / 2, line = li === 0 ? .17 : .09;
+  ctx.save(); ctx.clip(path);
+  ctx.beginPath(); ctx.moveTo(0, 0);
+  for (let sx = 0; sx <= W + 6; sx += 6) {
+    const wx = sx + off, wm = weights(wx / (L.f * W))[1];
+    const y = wm > .02 ? L.base - H * line + (vnoise(wx / 16) - .5) * H * .035 : -10;
+    ctx.lineTo(sx, y);
+  }
+  ctx.lineTo(W, 0); ctx.closePath();
+  const warm = smooth(.72, .78, p);
+  const g = ctx.createLinearGradient(0, L.base - H * .35, 0, L.base);
+  g.addColorStop(0, css(mix([248, 250, 255], [255, 226, 205], warm)));
+  g.addColorStop(1, css(mix([206, 216, 236], [214, 190, 196], warm)));
+  ctx.fillStyle = g; ctx.fill();
+  ctx.restore();
+}
+function snowShade(L, path, cx) { // soft blue shade on the run so it reads as snow, not paper
+  if (mtnWeightOnScreen(L, cx) <= 0) return;
+  ctx.save(); ctx.clip(path);
+  const g = ctx.createLinearGradient(0, L.base - H * .36, 0, H);
+  g.addColorStop(0, 'rgba(255,255,255,0)'); g.addColorStop(1, 'rgba(120,140,190,.35)');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  ctx.restore();
+}
+function pines(L, cx) {
+  const off = cx * L.f - W / 2, cell = 23;
+  ctx.fillStyle = css(L.col.map(v => v * .62));
+  for (let c = Math.floor(off / cell) - 1; c <= Math.floor((off + W) / cell) + 1; c++) {
+    const wx = c * cell + hash(c + 3) * 12, wm = weights(wx / (L.f * W))[1];
+    if (wm < .4 || hash(c + 61) < .35) continue;
+    const h0 = heightAt(1, wx, L.f);
+    if (h0 > H * .075) continue;
+    const sx = wx - off, y = L.base - h0 + 3, th = 14 + hash(c + 8) * 20;
+    ctx.globalAlpha = wm;
+    ctx.beginPath(); ctx.moveTo(sx, y - th); ctx.lineTo(sx + th * .3, y); ctx.lineTo(sx - th * .3, y); ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+}
+
+function rider(L, p, cx) {
+  const vis = smooth(.678, .69, p) * (1 - smooth(.765, .78, p));
+  if (vis <= 0) return;
+  const t = smooth(.682, .77, p);
+  const off = cx - W / 2;
+  const wx = HILL * W + lerp(.02, 1.35, t) * W;
+  const sx = wx - off;
+  const ground = x => L.base - heightAt(2, x, 1);
+  const sy = ground(wx);
+  const ang = Math.atan2(ground(wx + 6) - ground(wx - 6), 12);
+  const now = performance.now();
+  const carve = reduce ? 0 : Math.sin(now / 380) * .07;
+  const s = clamp(W / 1300, .7, 1.25) * 1.6;
+
+  // snow spray kicked up behind the board
+  ctx.save(); ctx.translate(sx, sy); ctx.rotate(ang);
+  for (let i = 0; i < 26; i++) {
+    const k = hash(i * 7.3), age = reduce ? k : ((now / 700 + k) % 1);
+    const px = -s * (18 + age * 70 + hash(i) * 20), py = -s * (age * 34 * (1 - age) * 3 + hash(i + 2) * 6);
+    ctx.fillStyle = `rgba(255,255,255,${vis * (1 - age) * .85})`;
+    ctx.beginPath(); ctx.arc(px, py, s * (1.2 + hash(i + 4) * 2.4), 0, 7); ctx.fill();
+  }
+  // shadow
+  ctx.fillStyle = `rgba(70,90,140,${vis * .25})`;
+  ctx.beginPath(); ctx.ellipse(0, 2, 34 * s, 4 * s, 0, 0, 7); ctx.fill();
+  ctx.rotate(carve); ctx.scale(s, s); ctx.globalAlpha = vis;
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  // board
+  ctx.fillStyle = '#1b2244'; ctx.beginPath(); ctx.roundRect(-28, -5, 56, 6, 3); ctx.fill();
+  ctx.fillStyle = '#FFC27A'; ctx.fillRect(-18, -4, 36, 2);
+  // legs
+  ctx.strokeStyle = '#2b3357'; ctx.lineWidth = 6.5;
+  ctx.beginPath(); ctx.moveTo(-10, -5); ctx.lineTo(-13, -16); ctx.lineTo(-3, -26); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(10, -5); ctx.lineTo(9, -16); ctx.lineTo(2, -26); ctx.stroke();
+  // jacket
+  ctx.strokeStyle = '#FF6B35'; ctx.lineWidth = 12;
+  ctx.beginPath(); ctx.moveTo(0, -27); ctx.lineTo(5, -42); ctx.stroke();
+  ctx.lineWidth = 5;
+  ctx.beginPath(); ctx.moveTo(4, -41); ctx.lineTo(-12, -37); ctx.lineTo(-24, -31); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(6, -41); ctx.lineTo(17, -37); ctx.lineTo(27, -39); ctx.stroke();
+  // helmet and goggles
+  ctx.fillStyle = '#F4F7FC'; ctx.beginPath(); ctx.arc(8, -51, 6.5, 0, 7); ctx.fill();
+  ctx.fillStyle = '#FFC27A'; ctx.beginPath(); ctx.roundRect(9, -53, 7, 3.6, 1.8); ctx.fill();
+  ctx.restore();
+}
+
+function haze(y, p) {
+  const [, , hor] = keyed(SKY, p);
+  const g = ctx.createLinearGradient(0, y - H * .12, 0, y + H * .05);
+  g.addColorStop(0, css(hor, 0)); g.addColorStop(1, css(hor, .35));
+  ctx.fillStyle = g; ctx.fillRect(0, y - H * .12, W, H * .17);
+}
+
+function cityLights(L, p, cx) {
+  const night = smooth(.8, .9, p);
+  if (night <= 0) return;
+  const off = cx * L.f - W / 2;
+  const b0 = Math.floor(off / 34) - 1, b1 = Math.floor((off + W) / 34) + 1;
+  for (let b = b0; b <= b1; b++) {
+    const wx = b * 34 + 17, r = wx / (L.f * W);
+    const wc = weights(r)[3];
+    if (wc < .5) continue;
+    const h = heightAt(1, wx, L.f);
+    if (h < 8) continue;
+    const sx = b * 34 - off;
+    for (let row = 0; row * 7 + 8 < h; row++) for (let col = 0; col < 4; col++) {
+      const lit = hash(b * 131 + row * 17 + col * 3);
+      if (lit > .42) continue;
+      ctx.fillStyle = `rgba(255,${200 + (lit * 120 | 0)},${130 + (lit * 200 | 0)},${night * wc * (.45 + lit)})`;
+      ctx.fillRect(sx + 5 + col * 7, L.base - h + 6 + row * 7, 3, 3);
+    }
+  }
+  // antennas with blinking beacons on the two landmark towers
+  [[TOWER_A, .42, [-5, 5]], [TOWER_B, .36, [-6, 6]]].forEach(([r, hh, xs]) => {
+    const sx = r * L.f * W - off;
+    if (sx < -40 || sx > W + 40) return;
+    const top = L.base - H * hh;
+    ctx.strokeStyle = css(keyed(LAND, p)[1]); ctx.lineWidth = 2;
+    xs.forEach(dx => { ctx.beginPath(); ctx.moveTo(sx + dx, top); ctx.lineTo(sx + dx, top - H * .05); ctx.stroke(); });
+    const blink = reduce ? 1 : (Math.sin(performance.now() / 420) > .2 ? 1 : .15);
+    ctx.fillStyle = `rgba(255,70,60,${night * blink})`;
+    xs.forEach(dx => { ctx.beginPath(); ctx.arc(sx + dx, top - H * .05, 2.4, 0, 7); ctx.fill(); });
+  });
+}
+
+function farmBuildings(L, cx) {
+  const off = cx * L.f - W / 2, cell = 420;
+  for (let c = Math.floor(off / cell) - 1; c <= Math.floor((off + W) / cell) + 1; c++) {
+    const wx = c * cell + 200, r = wx / (L.f * W), wp = weights(r)[2];
+    if (wp < .6 || hash(c + 77) < .35) continue;
+    const sx = wx - off, y = L.base - heightAt(1, wx, L.f), kind = hash(c + 5);
+    ctx.fillStyle = css(keyed(LAND, 0.8)[1].map(v => v * .8));
+    ctx.globalAlpha = wp;
+    if (kind < .5) { // barn and silo
+      ctx.beginPath(); ctx.moveTo(sx, y); ctx.lineTo(sx, y - 18); ctx.lineTo(sx + 14, y - 28); ctx.lineTo(sx + 28, y - 18); ctx.lineTo(sx + 28, y); ctx.fill();
+      ctx.fillRect(sx + 33, y - 40, 10, 40); ctx.beginPath(); ctx.arc(sx + 38, y - 40, 5, Math.PI, 0); ctx.fill();
+    } else { // water tower
+      ctx.fillRect(sx + 3, y - 34, 2, 34); ctx.fillRect(sx + 17, y - 34, 2, 34);
+      ctx.beginPath(); ctx.ellipse(sx + 11, y - 42, 14, 10, 0, 0, 7); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+}
+
+function cacti(L, cx) {
+  const off = cx * L.f - W / 2, cell = 150;
+  ctx.fillStyle = css(L.col.map(v => v * .7));
+  for (let c = Math.floor(off / cell) - 1; c <= Math.floor((off + W) / cell) + 1; c++) {
+    const wx = c * cell + hash(c) * 90, wd = weights(wx / W)[0];
+    if (wd < .5 || hash(c + 33) < .55) continue;
+    const sx = wx - off, y = L.base + 2, h = H * (.035 + hash(c + 2) * .04), w = Math.max(5, h * .13);
+    ctx.globalAlpha = wd;
+    ctx.beginPath(); ctx.roundRect(sx - w / 2, y - h, w, h, w / 2); ctx.fill();
+    ctx.beginPath(); ctx.roundRect(sx - w * 2.1, y - h * .7, w * .85, h * .35, w / 2); ctx.fill();
+    ctx.fillRect(sx - w * 2.1, y - h * .42, w * 1.7, w * .8);
+    ctx.beginPath(); ctx.roundRect(sx + w * 1.25, y - h * .82, w * .85, h * .4, w / 2); ctx.fill();
+    ctx.fillRect(sx + w * .3, y - h * .5, w * 1.5, w * .8);
+  }
+  ctx.globalAlpha = 1;
+}
+
+function fields(L, cx, p) {
+  const wp = weights(cx / W)[2];
+  if (wp <= .05) return;
+  const rows = 7;
+  for (let i = 0; i < rows; i++) {
+    const y = L.base + 8 + Math.pow(i / rows, 1.6) * (H - L.base);
+    ctx.fillStyle = `rgba(${i % 2 ? '214,170,92' : '120,160,90'},${wp * .12 * (1 - smooth(.86, .92, p))})`;
+    ctx.fillRect(0, y, W, 3 + i * 3);
+  }
+}
+
+function truck(L, p, cx) {
+  const vis = smooth(.56, .6, p) * (1 - smooth(.655, .675, p));
+  if (vis <= 0) return;
+  const s = clamp(W / 1300, .55, 1.15);
+  const x = W * .28 + Math.max(0, cx / W - 1.45) * W * 1.6;
+  const y = L.base;
+  const body = css(L.col.map(v => v * .55));
+  ctx.save(); ctx.globalAlpha = vis; ctx.translate(x, y); ctx.scale(s, s);
+  // headlight beam
+  const beam = ctx.createLinearGradient(150, 0, 330, 0);
+  beam.addColorStop(0, 'rgba(255,236,190,.55)'); beam.addColorStop(1, 'rgba(255,236,190,0)');
+  ctx.fillStyle = beam; ctx.beginPath(); ctx.moveTo(156, -18); ctx.lineTo(330, -4); ctx.lineTo(330, 6); ctx.lineTo(156, -12); ctx.fill();
+  ctx.fillStyle = body;
+  ctx.fillRect(-120, -64, 196, 50);                       // trailer
+  ctx.fillRect(-124, -18, 280, 6);                        // chassis
+  ctx.beginPath(); ctx.moveTo(84, -12); ctx.lineTo(84, -60); ctx.lineTo(128, -60); ctx.lineTo(150, -36); ctx.lineTo(156, -12); ctx.fill(); // cab
+  ctx.fillStyle = 'rgba(255,214,150,.55)'; ctx.beginPath(); ctx.moveTo(126, -55); ctx.lineTo(144, -36); ctx.lineTo(126, -36); ctx.fill(); // windshield glint
+  ctx.fillStyle = body;
+  ctx.fillRect(98, -70, 34, 7);                           // sensor bar on the roof
+  ctx.beginPath(); ctx.arc(115, -72, 7, Math.PI, 0); ctx.fill(); // lidar
+  ctx.fillRect(146, -46, 10, 6);                          // side sensor
+  const spin = reduce ? 0 : performance.now() / 120;
+  [-96, -70, 40, 66, 132].forEach(wx => {
+    ctx.fillStyle = body; ctx.beginPath(); ctx.arc(wx, -6, 11, 0, 7); ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,.18)'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(wx, -6); ctx.lineTo(wx + Math.cos(spin) * 8, -6 + Math.sin(spin) * 8); ctx.stroke();
+  });
+  ctx.fillStyle = 'rgba(255,240,200,.95)'; ctx.fillRect(152, -20, 4, 5); // headlight
+  ctx.restore();
+  // road line under the truck
+  ctx.globalAlpha = vis * .5; ctx.fillStyle = css(L.col.map(v => v * .45));
+  ctx.fillRect(0, y + 2, W, 3); ctx.globalAlpha = 1;
+}
+
+/* ---------- scroll -> scene progress ---------- */
+const stops = [...document.querySelectorAll('[data-p]')];
+let anchors = [];
+function measure() {
+  const docH = document.documentElement.scrollHeight;
+  anchors = [[0, 0], ...stops.map(s => [s.offsetTop + s.offsetHeight / 2 - innerHeight / 2, +s.dataset.p]), [docH - innerHeight, 1]];
+  anchors.sort((a, b) => a[0] - b[0]);
+}
+function targetP() {
+  const y = scrollY;
+  for (let i = 0; i < anchors.length - 1; i++) {
+    const [y0, p0] = anchors[i], [y1, p1] = anchors[i + 1];
+    if (y <= y1) return lerp(p0, p1, clamp((y - y0) / Math.max(1, y1 - y0)));
+  }
+  return 1;
+}
+
+/* ---------- HUD ---------- */
+const altEl = document.getElementById('alt'), whereEl = document.getElementById('where'), coordEl = document.getElementById('coords');
+const dot = document.getElementById('dot'), navLinks = [...document.querySelectorAll('.gauge a')];
+const ALT = [[0, 408000], [.12, 120000], [.22, 30000], [.32, 11000], [.47, 3000], [.58, 450], [.64, 300], [.9, 300], [.985, 0]];
+function altitude(p) {
+  let i = 0; while (i < ALT.length - 2 && p > ALT[i + 1][0]) i++;
+  const [p0, a0] = ALT[i], [p1, a1] = ALT[i + 1], t = clamp((p - p0) / (p1 - p0));
+  return a0 > 0 && a1 > 0 ? Math.exp(lerp(Math.log(a0), Math.log(a1), t)) : lerp(a0, a1, t);
+}
+const PLACES = [[.12, 'Low Earth orbit'], [.25, 'Upper atmosphere'], [.4, 'Above the clouds'], [.55, 'In the clouds'], [.668, 'Over Tucson, Arizona'], [.77, 'Over the Rockies, Colorado'], [.87, 'Over Champaign, Illinois'], [1.01, 'Chicago, Illinois']];
+const GEO = [[0, 32.22, 110.97], [.62, 32.22, 110.97], [.72, 39.6, 106.05], [.815, 40.11, 88.24], [.985, 41.88, 87.63]];
+let lastHud = '';
+function hud(p) {
+  const a = altitude(p);
+  const alt = a >= 1000 ? `${(a / 1000).toFixed(a < 10000 ? 1 : 0)} km` : `${Math.round(a / 10) * 10} m`;
+  const place = PLACES.find(x => p < x[0])[1];
+  let i = 0; while (i < GEO.length - 2 && p > GEO[i + 1][0]) i++;
+  const t = smooth(GEO[i][0], GEO[i + 1][0], p);
+  const lat = lerp(GEO[i][1], GEO[i + 1][1], t), lon = lerp(GEO[i][2], GEO[i + 1][2], t);
+  const key = alt + place + lat.toFixed(2);
+  if (key !== lastHud) {
+    lastHud = key;
+    altEl.textContent = alt; whereEl.textContent = place;
+    coordEl.textContent = `${lat.toFixed(2)}° N ${lon.toFixed(2)}° W`;
+  }
+  // gauge marker
+  const marks = [0, .32, .47, .62, .72, .815, .985];
+  let j = 0; while (j < marks.length - 2 && p > marks[j + 1]) j++;
+  const f = clamp((p - marks[j]) / (marks[j + 1] - marks[j]));
+  const a0 = navLinks[j], a1 = navLinks[j + 1];
+  if (a0 && a1) {
+    const y = lerp(a0.offsetTop + a0.offsetHeight / 2, a1.offsetTop + a1.offsetHeight / 2, f);
+    dot.style.transform = `translateY(${y - 4.5}px)`;
+  }
+  const near = marks.reduce((bi, m, k) => Math.abs(m - p) < Math.abs(marks[bi] - p) ? k : bi, 0);
+  navLinks.forEach((l, k) => l.classList.toggle('on', k === near));
+}
+
+/* ---------- loop ---------- */
+let p = 0;
+function frame(t) {
+  const tp = targetP();
+  p = reduce ? tp : p + (tp - p) * .14;
+  if (Math.abs(tp - p) < .00005) p = tp;
+  const horizonY = H * (p < .22 ? lerp(.74, .62, smooth(0, .22, p)) : .62);
+  drawSky(p, horizonY);
+  drawStars(p, t);
+  drawSun(p);
+  drawEarth(p);
+  drawClouds(p, t, 'back');
+  drawLand(p);
+  drawClouds(p, t, 'front');
+  drawFog(p);
+  hud(p);
+  requestAnimationFrame(frame);
+}
+
+build(); resize(); measure();
+addEventListener('resize', () => { resize(); measure(); });
+addEventListener('load', measure);
+if (document.fonts) document.fonts.ready.then(measure);
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
 </html>
