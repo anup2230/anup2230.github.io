@@ -31,7 +31,7 @@ a{color:inherit}
 .bh-link.live{opacity:1}
 .bh-fall{position:fixed;inset:0;z-index:100;pointer-events:none;background:radial-gradient(circle at var(--x) var(--y),#000 0,#000 var(--r),rgba(0,0,0,0) calc(var(--r) * 1.6));--r:0px}
 .tri-label{
-  position:fixed;left:0;top:0;z-index:3;max-width:14rem;text-align:right;font-size:.82rem;line-height:1.4;color:var(--soft);
+  position:fixed;left:0;top:0;z-index:3;max-width:15rem;text-align:center;font-size:.82rem;line-height:1.4;color:var(--soft);
   pointer-events:none;opacity:0;transition:opacity .4s;text-shadow:0 1px 6px rgba(0,0,0,.6)
 }
 .jump-label{text-align:left}
@@ -478,7 +478,7 @@ function drawTriple(p, t) {
   const far = tri.b.some(o => Math.hypot(o.x, o.y) > 2.6);
   if (far) triReset();
   const k = clamp(W / 1440, .6, 1) * 40;
-  const cx = W * (W > 900 ? .79 : .72), cy = H * .14 - p * H * 1.2;
+  const cx = W * (W > 900 ? .745 : .66), cy = H * (W > 900 ? .2 : .15) - p * H * 1.2;
   tri.b.forEach((o, i) => {
     const tr = tri.trails[i]; tr.push([o.x, o.y]); if (tr.length > 140) tr.shift();
     const c = TRI_COLORS[i];
@@ -492,7 +492,7 @@ function drawTriple(p, t) {
     g.addColorStop(0, css(c, vis)); g.addColorStop(.25, css(c, vis * .45)); g.addColorStop(1, css(c, 0));
     ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, 16, 0, 7); ctx.fill();
   });
-  triLabel.style.transform = `translate(${cx - 2.6 * k - triLabel.offsetWidth}px,${cy - 22}px)`;
+  triLabel.style.transform = `translate(${cx - triLabel.offsetWidth / 2}px,${cy + 2.4 * k}px)`;
 }
 
 /* ---------- satellites ---------- */
@@ -688,7 +688,7 @@ function spawnComet(t) {
 }
 function spawnUfo(t) {
   const fromLeft = Math.random() < .5;
-  visitors.ufo = W > 900 ? {fromLeft, t0: t, hx: W * (.7 + Math.random() * .12), hy: H * (.26 + Math.random() * .2)}
+  visitors.ufo = W > 900 ? {fromLeft, t0: t, hx: W * (.71 + Math.random() * .1), hy: H * (.47 + Math.random() * .12)}
     : {fromLeft, t0: t, hx: W * (.3 + Math.random() * .4), hy: H * (.06 + Math.random() * .1)};
 }
 function drawComet(c, t, vis) {
@@ -762,7 +762,7 @@ const bhLink = document.getElementById('bhLink');
 let bhHover = false, bhFalling = 0;
 bhLink.addEventListener('pointerenter', () => bhHover = true);
 bhLink.addEventListener('pointerleave', () => bhHover = false);
-function bhPos(p) { return W > 900 ? [W * .775, H * .6 - p * H * 1.4] : [W * .82, H * .5 - p * H * 1.4]; }
+function bhPos(p) { return W > 900 ? [W * .93, H * .12 - p * H * 1.4] : [W * .87, H * .075 - p * H * 1.4]; } // top right
 function drawBlackHole(p, t) {
   const vis = 1 - smooth(.06, .12, p);
   const [x, y] = bhPos(p);
