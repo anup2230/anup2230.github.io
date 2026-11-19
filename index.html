@@ -960,8 +960,8 @@ function drawLand(p) {
     if (li < 2) snowcaps(L, li, path, cx, p);
     if (li === 2) snowShade(L, path, cx);
     if (li === 0) haze(L.base, p);
-    if (li === 1) { cityLights(L, p, cx); drawSkyline(L, p, cx); farmBuildings(L, cx); pines(L, cx); }
-    if (li === 2) { cacti(L, cx); fields(L, cx, p); }
+    if (li === 1) { cityLights(L, p, cx); drawSkyline(L, p, cx); farmBuildings(L, cx); pines(L, cx); altgeld(L, cx, p); }
+    if (li === 2) { cacti(L, cx); fields(L, cx, p); almaMater(L, cx, p); cow(L, cx); }
   });
   lakefront(layers, p, cx);
   truck(layers[2], p, cx);
@@ -1397,6 +1397,93 @@ function drawSkyline(L, p, cx) {
     }
     ctx.restore();
   });
+}
+
+/* ---------- Champaign-Urbana: Altgeld Hall, the Alma Mater, and a cow in the field ---------- */
+function uiucScale() { return clamp(H / 900, .7, 1.25) * clamp(W / 1440, .75, 1.1); }
+function altgeld(L, cx, p) {
+  const r = 3.42, wx = r * L.f * W, off = cx * L.f - W / 2, sx = wx - off, wp = weights(r)[2];
+  if (wp < .3 || sx < -200 || sx > W + 200) return;
+  const u = uiucScale() * 1.3, base = L.base - heightAt(1, wx, L.f) + 2;
+  const stone = css(mix(hex('#7a4532'), L.col, .45)), dark = css(mix(hex('#4a2a22'), L.col, .5));
+  const lit = smooth(.76, .84, p);
+  ctx.save(); ctx.globalAlpha = wp;
+  ctx.fillStyle = stone;
+  const w = 150 * u, h = 30 * u, x0 = sx - w * .3;
+  ctx.fillRect(x0, base - h, w, h);                                                    // main hall
+  [[.08, .3], [.42, .62], [.74, .96]].forEach(([a, b]) => {                           // gables
+    ctx.beginPath(); ctx.moveTo(x0 + w * a, base - h); ctx.lineTo(x0 + w * (a + b) / 2, base - h - 14 * u); ctx.lineTo(x0 + w * b, base - h); ctx.fill(); });
+  ctx.fillStyle = dark; ctx.fillRect(x0 - 2 * u, base - h - 2 * u, w + 4 * u, 3 * u);   // roofline
+  // the bell tower with its open arched belfry and pyramid roof
+  const tw = 24 * u, th = 78 * u, tx = x0 + w * .3 - tw / 2;
+  ctx.fillStyle = stone; ctx.fillRect(tx, base - th, tw, th);
+  ctx.fillStyle = dark; ctx.beginPath(); ctx.moveTo(tx - 3 * u, base - th); ctx.lineTo(tx + tw / 2, base - th - 22 * u); ctx.lineTo(tx + tw + 3 * u, base - th); ctx.fill();
+  ctx.fillRect(tx + tw / 2 - .7 * u, base - th - 28 * u, 1.4 * u, 6 * u);              // finial
+  ctx.fillStyle = `rgba(20,16,24,.9)`;
+  for (let i = 0; i < 3; i++) { const ax = tx + 4 * u + i * 6 * u; ctx.beginPath(); ctx.moveTo(ax, base - th + 16 * u); ctx.lineTo(ax, base - th + 7 * u); ctx.arc(ax + 2 * u, base - th + 7 * u, 2 * u, Math.PI, 0); ctx.lineTo(ax + 4 * u, base - th + 16 * u); ctx.fill(); }
+  // arched windows glowing at dusk
+  for (let i = 0; i < 11; i++) {
+    const ax = x0 + 8 * u + i * 13 * u;
+    if (Math.abs(ax - (tx + tw / 2)) < tw / 2 + 4 * u) continue;
+    ctx.fillStyle = `rgba(255,${190 + (hash(i) * 50 | 0)},120,${.25 + lit * .7 * (hash(i + 5) > .25 ? 1 : .2)})`;
+    ctx.beginPath(); ctx.moveTo(ax, base - 6 * u); ctx.lineTo(ax, base - 18 * u); ctx.arc(ax + 2.5 * u, base - 18 * u, 2.5 * u, Math.PI, 0); ctx.lineTo(ax + 5 * u, base - 6 * u); ctx.fill();
+  }
+  ctx.restore();
+}
+function almaMater(L, cx, p) {
+  const r = 3.79, wx = r * W, off = cx - W / 2, sx = wx - off, wp = weights(r)[2];
+  if (wp < .3 || sx < -120 || sx > W + 120) return;
+  const u = uiucScale() * 1.5, base = L.base + 3;
+  const bronze = css(mix(hex('#5f8a76'), L.col, .35)), shade = css(mix(hex('#3d5c4f'), L.col, .4));
+  ctx.save(); ctx.globalAlpha = wp; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  // granite pedestal and the bench behind her
+  ctx.fillStyle = css(mix(hex('#8a8c94'), L.col, .5)); ctx.fillRect(sx - 30 * u, base - 9 * u, 60 * u, 9 * u);
+  ctx.fillRect(sx - 22 * u, base - 22 * u, 44 * u, 13 * u);
+  // Alma Mater: robed, standing, arms open in welcome
+  ctx.fillStyle = bronze;
+  ctx.beginPath(); ctx.moveTo(sx - 8 * u, base - 22 * u); ctx.lineTo(sx - 3.5 * u, base - 50 * u); ctx.lineTo(sx + 3.5 * u, base - 50 * u); ctx.lineTo(sx + 8 * u, base - 22 * u); ctx.fill();
+  ctx.beginPath(); ctx.arc(sx, base - 54 * u, 3.6 * u, 0, 7); ctx.fill();
+  ctx.strokeStyle = bronze; ctx.lineWidth = 2.6 * u;
+  ctx.beginPath(); ctx.moveTo(sx - 3 * u, base - 47 * u); ctx.lineTo(sx - 12 * u, base - 52 * u); ctx.lineTo(sx - 19 * u, base - 58 * u);
+  ctx.moveTo(sx + 3 * u, base - 47 * u); ctx.lineTo(sx + 12 * u, base - 52 * u); ctx.lineTo(sx + 19 * u, base - 58 * u); ctx.stroke();
+  // Learning and Labor, the two figures at her sides, clasping hands
+  ctx.fillStyle = shade;
+  [[-1, 1], [1, -1]].forEach(([side]) => {
+    const fx = sx + side * 16 * u;
+    ctx.beginPath(); ctx.moveTo(fx - 4 * u, base - 22 * u); ctx.lineTo(fx - 2.5 * u, base - 38 * u); ctx.lineTo(fx + 2.5 * u, base - 38 * u); ctx.lineTo(fx + 4 * u, base - 22 * u); ctx.fill();
+    ctx.beginPath(); ctx.arc(fx, base - 41 * u, 2.8 * u, 0, 7); ctx.fill();
+  });
+  ctx.strokeStyle = shade; ctx.lineWidth = 2 * u;
+  ctx.beginPath(); ctx.moveTo(sx - 14 * u, base - 32 * u); ctx.lineTo(sx - 8 * u, base - 30 * u); ctx.moveTo(sx + 14 * u, base - 32 * u); ctx.lineTo(sx + 8 * u, base - 30 * u); ctx.stroke();
+  ctx.restore();
+}
+function cow(L, cx) {
+  const r = 3.62, wx = r * W, off = cx - W / 2, sx = wx - off, wp = weights(r)[2];
+  if (wp < .3 || sx < -80 || sx > W + 80) return;
+  const u = uiucScale() * 1.6, base = L.base + 6 * u, t = performance.now();
+  const chew = reduce ? 0 : Math.sin(t / 220) * 1.2 * u, tail = reduce ? 0 : Math.sin(t / 600) * .5;
+  ctx.save(); ctx.globalAlpha = wp; ctx.translate(sx, base); ctx.lineCap = 'round';
+  // legs
+  ctx.strokeStyle = '#2b2b30'; ctx.lineWidth = 3.4 * u;
+  [-13, -8, 9, 14].forEach(lx => { ctx.beginPath(); ctx.moveTo(lx * u, -14 * u); ctx.lineTo(lx * u, 0); ctx.stroke(); });
+  // tail
+  ctx.lineWidth = 1.4 * u; ctx.beginPath(); ctx.moveTo(-18 * u, -22 * u); ctx.quadraticCurveTo(-22 * u, -12 * u, (-21 + tail * 6) * u, -6 * u); ctx.stroke();
+  // body, Holstein white with black patches
+  ctx.fillStyle = '#F2F2EE'; ctx.beginPath(); ctx.ellipse(0, -21 * u, 19 * u, 9 * u, 0, 0, 7); ctx.fill();
+  ctx.save(); ctx.beginPath(); ctx.ellipse(0, -21 * u, 19 * u, 9 * u, 0, 0, 7); ctx.clip();
+  ctx.fillStyle = '#1e1e24';
+  [[-9, -25, 6, 4], [4, -18, 7, 5], [12, -26, 5, 3.5], [-2, -28, 4, 3]].forEach(([a, b, c, d]) => { ctx.beginPath(); ctx.ellipse(a * u, b * u, c * u, d * u, .4, 0, 7); ctx.fill(); });
+  ctx.restore();
+  ctx.fillStyle = '#e8b4b0'; ctx.beginPath(); ctx.ellipse(-6 * u, -12.5 * u, 3 * u, 2 * u, 0, 0, 7); ctx.fill(); // udder
+  // neck down to the grass, head grazing
+  ctx.fillStyle = '#F2F2EE'; ctx.beginPath(); ctx.moveTo(14 * u, -26 * u); ctx.lineTo(22 * u, -10 * u); ctx.lineTo(16 * u, -8 * u); ctx.lineTo(12 * u, -18 * u); ctx.fill();
+  ctx.fillStyle = '#1e1e24'; ctx.beginPath(); ctx.ellipse(22 * u, -6 * u + chew * .3, 4.4 * u, 6 * u, -.5, 0, 7); ctx.fill();
+  ctx.fillStyle = '#e8b4b0'; ctx.beginPath(); ctx.ellipse(24.5 * u, -2 * u + chew * .3, 2.4 * u, 2 * u, -.5, 0, 7); ctx.fill();
+  ctx.fillStyle = '#1e1e24'; ctx.beginPath(); ctx.ellipse(18.5 * u, -10 * u, 2.2 * u, 1.2 * u, .6, 0, 7); ctx.fill(); // ear
+  // grass tufts
+  ctx.strokeStyle = '#4f7a3a'; ctx.lineWidth = 1.2 * u;
+  [[20, 0], [26, 1], [-26, 0], [2, 1]].forEach(([gx, gy]) => { for (let b = -1; b <= 1; b++) { ctx.beginPath(); ctx.moveTo(gx * u, gy * u); ctx.lineTo((gx + b * 2) * u, (gy - 5) * u); ctx.stroke(); } });
+  ctx.restore();
 }
 
 function farmBuildings(L, cx) {
