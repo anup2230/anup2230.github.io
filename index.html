@@ -960,8 +960,8 @@ function drawLand(p) {
     if (li < 2) snowcaps(L, li, path, cx, p);
     if (li === 2) snowShade(L, path, cx);
     if (li === 0) haze(L.base, p);
-    if (li === 1) { cityLights(L, p, cx); drawSkyline(L, p, cx); farmBuildings(L, cx); pines(L, cx); quadLawn(L, cx, p); altgeld(L, cx, p); bellTower(L, cx, p); stateFarmCenter(L, cx, p); }
-    if (li === 2) { cacti(L, cx); fields(L, cx, p); cornField(L, cx, p); cow(L, cx); }
+    if (li === 1) { cityLights(L, p, cx); drawSkyline(L, p, cx); farmBuildings(L, cx); pines(L, cx); altgeld(L, cx, p); bellTower(L, cx, p); stateFarmCenter(L, cx, p); }
+    if (li === 2) { cacti(L, cx); fields(L, cx, p); cornField(L, cx, p); }
   });
   lakefront(layers, p, cx);
   truck(layers[2], p, cx);
@@ -1399,8 +1399,8 @@ function drawSkyline(L, p, cx) {
   });
 }
 
-/* ---------- Champaign-Urbana: Altgeld Hall and the Alma Mater, State Farm Center, corn, and a cow ---------- */
-const CAMPUS = {altgeld: 3.415, alma: 3.585, bell: 3.68, arena: 3.865, cow: 3.89}; // r positions; the first three sit on the mid layer
+/* ---------- Champaign-Urbana: Altgeld Hall and the Alma Mater, the bell tower, State Farm Center and corn ---------- */
+const CAMPUS = {altgeld: 3.415, alma: 3.585, bell: 3.68, arena: 3.865}; // r positions; the first three sit on the mid layer
 function uiucScale() { return clamp(H / 900, .7, 1.25) * clamp(W / 1440, .75, 1.1); }
 function onMid(L, cx, r) { return r * L.f * W - (cx * L.f - W / 2); }
 function flatGround(L, sx, half) { // lowest point of the ground under a footprint, so buildings sit flat on a foundation
@@ -1530,23 +1530,6 @@ function bellTower(L, cx, p) { // McFarland Memorial Bell Tower on the south qua
   ctx.fillStyle = `rgba(255,236,190,${.35 + lit * .6})`; ctx.beginPath(); ctx.arc(sx, base - th * .78, 3.6 * u, 0, 7); ctx.fill();
   ctx.restore();
 }
-function quadLawn(L, cx, p) { // the Main Quad in front of Altgeld, with its crossing walkways
-  const x0 = onMid(L, cx, CAMPUS.altgeld) - 70 * uiucScale(), x1 = onMid(L, cx, CAMPUS.bell) + 20 * uiucScale(), wp = weights(CAMPUS.altgeld)[2];
-  if (wp < .3 || x1 < -50 || x0 > W + 50) return;
-  const top = campusGround(L, cx, (x0 + x1) / 2, (x1 - x0) / 2) - 1, bot = top + H * .06, mid = (x0 + x1) / 2, inset = (x1 - x0) * .12;
-  ctx.save(); ctx.globalAlpha = wp;
-  ctx.fillStyle = css(mix([74, 112, 62], L.col, .55));
-  ctx.beginPath(); ctx.moveTo(x0 + inset, top); ctx.lineTo(x1 - inset, top); ctx.lineTo(x1, bot); ctx.lineTo(x0, bot); ctx.closePath(); ctx.fill();
-  ctx.strokeStyle = css(mix([226, 220, 204], L.col, .35), .85); ctx.lineWidth = 1.4;
-  ctx.beginPath();
-  ctx.moveTo(x0 + inset, top); ctx.lineTo(x1, bot); ctx.moveTo(x1 - inset, top); ctx.lineTo(x0, bot);      // the diagonal walks
-  ctx.moveTo(mid, top); ctx.lineTo(mid, bot);                                                               // center walk
-  ctx.moveTo((x0 + x0 + inset) / 2, (top + bot) / 2); ctx.lineTo((x1 + x1 - inset) / 2, (top + bot) / 2); // cross walk
-  ctx.stroke();
-  ctx.fillStyle = css(mix([40, 70, 44], L.col, .5)); // a few trees along the edges
-  for (let i = 0; i < 8; i++) { const f = i / 7, tx = lerp(x0 + inset, x1 - inset, f), ty = top + 2; ctx.beginPath(); ctx.arc(tx, ty - 4, 4.5, 0, 7); ctx.fill(); }
-  ctx.restore();
-}
 function cornField(L, cx, p) { // rows of tall corn across the Illinois foreground, swaying a little
   const off = cx - W / 2, t = performance.now(), u = uiucScale();
   const gold = smooth(.8, .88, p);
@@ -1555,7 +1538,6 @@ function cornField(L, cx, p) { // rows of tall corn across the Illinois foregrou
     for (let sx = -((off + row * 37) % step); sx < W + step; sx += step) {
       const wx = sx + off, wp = weights(wx / W)[2];
       if (wp < .4) continue;
-      if (Math.abs(wx / W - CAMPUS.cow) < .08) continue;                // the pasture where the cow grazes
       const hv = hash(Math.floor(wx / step) * 7 + row), h = hgt * (.8 + hv * .35);
       const sway = reduce ? 0 : Math.sin(t / 900 + wx / 60) * 2.2 * u;
       const c = mix(mix([86, 128, 52], [176, 150, 70], hv * .5), [60, 54, 70], gold * .55);
@@ -1569,48 +1551,6 @@ function cornField(L, cx, p) { // rows of tall corn across the Illinois foregrou
       if (hv > .55) { ctx.fillStyle = css(mix([214, 186, 96], [80, 70, 70], gold * .5), wp); ctx.beginPath(); ctx.ellipse(sx + sway * .5 + 2 * u, y0 - h * .45, 1.6 * u, 3.6 * u, .3, 0, 7); ctx.fill(); } // ear
     }
   }
-}
-function cow(L, cx) { // a Holstein in the pasture, head down, grazing
-  const wx = CAMPUS.cow * W, sx = wx - (cx - W / 2), wp = weights(CAMPUS.cow)[2];
-  if (wp < .3 || sx < -100 || sx > W + 100) return;
-  const u = uiucScale() * 1.35, t = performance.now();
-  const graze = reduce ? 0 : Math.sin(t / 900), chew = reduce ? 0 : Math.sin(t / 180) * .6, tail = reduce ? 0 : Math.sin(t / 700);
-  ctx.save(); ctx.globalAlpha = wp; ctx.translate(sx, L.base + 18 * u); ctx.scale(u, u); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-  const white = '#F3F1EC', black = '#1d1d22', pink = '#E6A9A3';
-  // far legs, a shade darker
-  ctx.strokeStyle = '#cfcac0'; ctx.lineWidth = 4;
-  ctx.beginPath(); ctx.moveTo(-15, -14); ctx.lineTo(-16, -1); ctx.moveTo(11, -14); ctx.lineTo(13, -1); ctx.stroke();
-  // tail with its tuft
-  ctx.strokeStyle = white; ctx.lineWidth = 1.6;
-  ctx.beginPath(); ctx.moveTo(-23, -27); ctx.quadraticCurveTo(-26, -18, -25 + tail * 2, -9); ctx.stroke();
-  ctx.fillStyle = black; ctx.beginPath(); ctx.ellipse(-25 + tail * 2, -8, 1.6, 2.6, 0, 0, 7); ctx.fill();
-  // body: level back, deep belly, square rump
-  const body = new Path2D();
-  body.moveTo(-24, -28); body.lineTo(14, -30); body.quadraticCurveTo(19, -29, 19, -22);
-  body.lineTo(18, -15); body.quadraticCurveTo(0, -11, -20, -15); body.quadraticCurveTo(-25, -18, -24, -28); body.closePath();
-  ctx.fillStyle = white; ctx.fill(body);
-  ctx.save(); ctx.clip(body); ctx.fillStyle = black;
-  [[-14, -26, 7, 5, .3], [2, -19, 8, 5, -.2], [12, -28, 5, 4, .5], [-22, -18, 4, 4, 0]].forEach(([a, b, c, d, e]) => { ctx.beginPath(); ctx.ellipse(a, b, c, d, e, 0, 7); ctx.fill(); });
-  ctx.restore();
-  ctx.fillStyle = pink; ctx.beginPath(); ctx.ellipse(-12, -13.5, 3.2, 2.2, 0, 0, 7); ctx.fill();   // udder
-  // near legs with hooves
-  ctx.strokeStyle = white; ctx.lineWidth = 4.2;
-  ctx.beginPath(); ctx.moveTo(-19, -15); ctx.lineTo(-19, -7); ctx.lineTo(-18, -1); ctx.moveTo(14, -16); ctx.lineTo(15, -7); ctx.lineTo(15, -1); ctx.stroke();
-  ctx.fillStyle = black; ctx.fillRect(-20.5, -2, 4, 2.5); ctx.fillRect(13, -2, 4, 2.5);
-  // neck sloping down to the grass, head lowered and bobbing gently while it eats
-  const hy = 2 + graze * 1.2;
-  ctx.fillStyle = white;
-  ctx.beginPath(); ctx.moveTo(14, -30); ctx.quadraticCurveTo(24, -26, 28, -8 + hy * .5); ctx.lineTo(22, -6 + hy * .5); ctx.quadraticCurveTo(18, -16, 13, -18); ctx.fill();
-  ctx.fillStyle = black; // head
-  ctx.beginPath(); ctx.moveTo(23, -11 + hy); ctx.quadraticCurveTo(30, -14 + hy, 31, -6 + hy); ctx.lineTo(31, -1 + hy); ctx.quadraticCurveTo(27, 1 + hy, 24, -3 + hy); ctx.closePath(); ctx.fill();
-  ctx.fillStyle = white; ctx.beginPath(); ctx.ellipse(28, -8 + hy, 1.4, 3.2, .2, 0, 7); ctx.fill();            // blaze
-  ctx.fillStyle = pink; ctx.beginPath(); ctx.ellipse(30.5, -.5 + hy + chew * .4, 2.6, 1.8, 0, 0, 7); ctx.fill(); // muzzle
-  ctx.fillStyle = black; ctx.beginPath(); ctx.ellipse(22.5, -11 + hy, 3.2, 1.4, -.5, 0, 7); ctx.fill();          // ear
-  ctx.fillStyle = '#d9d2c2'; ctx.beginPath(); ctx.moveTo(25, -13 + hy); ctx.lineTo(26.5, -16 + hy); ctx.lineTo(26.5, -13 + hy); ctx.fill(); // horn nub
-  // pasture grass
-  ctx.strokeStyle = '#5c8a3f'; ctx.lineWidth = 1;
-  for (let g = -34; g < 40; g += 3) { const gh = 3 + hash(g) * 4; ctx.beginPath(); ctx.moveTo(g, 0); ctx.lineTo(g + (hash(g + 1) - .5) * 3, -gh); ctx.stroke(); }
-  ctx.restore();
 }
 
 function farmBuildings(L, cx) {
