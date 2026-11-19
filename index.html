@@ -960,7 +960,7 @@ function drawLand(p) {
     if (li < 2) snowcaps(L, li, path, cx, p);
     if (li === 2) snowShade(L, path, cx);
     if (li === 0) haze(L.base, p);
-    if (li === 1) { cityLights(L, p, cx); drawSkyline(L, p, cx); farmBuildings(L, cx); pines(L, cx); altgeld(L, cx, p); stateFarmCenter(L, cx, p); }
+    if (li === 1) { cityLights(L, p, cx); drawSkyline(L, p, cx); farmBuildings(L, cx); pines(L, cx); quadLawn(L, cx, p); altgeld(L, cx, p); bellTower(L, cx, p); stateFarmCenter(L, cx, p); }
     if (li === 2) { cacti(L, cx); fields(L, cx, p); cornField(L, cx, p); cow(L, cx); }
   });
   lakefront(layers, p, cx);
@@ -1400,7 +1400,7 @@ function drawSkyline(L, p, cx) {
 }
 
 /* ---------- Champaign-Urbana: Altgeld Hall and the Alma Mater, State Farm Center, corn, and a cow ---------- */
-const CAMPUS = {altgeld: 3.415, alma: 3.6, arena: 3.78, cow: 3.89}; // r positions; the first three sit on the mid layer
+const CAMPUS = {altgeld: 3.415, alma: 3.585, bell: 3.68, arena: 3.865, cow: 3.89}; // r positions; the first three sit on the mid layer
 function uiucScale() { return clamp(H / 900, .7, 1.25) * clamp(W / 1440, .75, 1.1); }
 function onMid(L, cx, r) { return r * L.f * W - (cx * L.f - W / 2); }
 function flatGround(L, sx, half) { // lowest point of the ground under a footprint, so buildings sit flat on a foundation
@@ -1466,29 +1466,85 @@ function almaMater(L, cx, p, ground) { // stands on the same quad, just in front
   ctx.beginPath(); ctx.moveTo(sx - 14 * u, base - 32 * u); ctx.lineTo(sx - 8 * u, base - 30 * u); ctx.moveTo(sx + 14 * u, base - 32 * u); ctx.lineTo(sx + 8 * u, base - 30 * u); ctx.stroke();
   ctx.restore();
 }
-function stateFarmCenter(L, cx, p) { // the Illini's saucer-shaped arena
+function stateFarmCenter(L, cx, p) { // the saucer: folded-plate dome on a cantilevered ring over a glass base
   const sx = onMid(L, cx, CAMPUS.arena), wp = weights(CAMPUS.arena)[2];
   if (wp < .3 || sx < -250 || sx > W + 250) return;
-  const u = uiucScale() * 1.3, w = 190 * u, base = campusGround(L, cx, sx, w / 2);
-  const concrete = css(mix(hex('#b9b3a8'), L.col, .5)), shadow = css(mix(hex('#7c776e'), L.col, .5));
-  const lit = smooth(.78, .86, p), t = performance.now();
+  const u = uiucScale() * 1.1, w = 200 * u, base = campusGround(L, cx, sx, w / 2);
+  const tone = c => css(mix(hex(c), L.col, .32));
+  const lit = smooth(.78, .86, p);
   ctx.save(); ctx.globalAlpha = wp;
-  // sloped, ribbed bowl
-  ctx.fillStyle = shadow;
-  ctx.beginPath(); ctx.moveTo(sx - w / 2, base); ctx.lineTo(sx - w * .44, base - 24 * u); ctx.lineTo(sx + w * .44, base - 24 * u); ctx.lineTo(sx + w / 2, base); ctx.fill();
-  ctx.strokeStyle = concrete; ctx.lineWidth = 1.2 * u;
-  for (let i = 0; i <= 16; i++) { const f = i / 16 - .5; ctx.beginPath(); ctx.moveTo(sx + f * w, base); ctx.lineTo(sx + f * w * .88, base - 24 * u); ctx.stroke(); }
-  // Illini orange glow ring under the dome edge
-  ctx.fillStyle = `rgba(232,74,39,${.55 + lit * .45})`; ctx.fillRect(sx - w * .44, base - 27 * u, w * .88, 3 * u);
-  // the shallow folded-plate dome
-  ctx.fillStyle = concrete;
-  ctx.beginPath(); ctx.moveTo(sx - w * .47, base - 27 * u); ctx.quadraticCurveTo(sx, base - 58 * u, sx + w * .47, base - 27 * u); ctx.closePath(); ctx.fill();
-  ctx.strokeStyle = shadow; ctx.lineWidth = 1;
-  for (let i = 1; i < 12; i++) { const f = i / 12; const x = sx - w * .47 + f * w * .94; const yTop = base - 27 * u - Math.sin(f * Math.PI) * 15.5 * u; ctx.beginPath(); ctx.moveTo(x, base - 27 * u); ctx.lineTo(sx + (x - sx) * .2, yTop - 1); ctx.stroke(); }
-  // a Block I banner by the entrance, in Illini blue and orange
-  ctx.fillStyle = '#13294B'; ctx.fillRect(sx - 9 * u, base - 22 * u, 18 * u, 18 * u);
+  // low concrete walls along the plaza
+  ctx.fillStyle = tone('#cfcac0'); ctx.fillRect(sx - w * .62, base - 7 * u, w * 1.24, 7 * u);
+  // glass base, glowing a little once it's dark
+  const gw = w * .78, gy = base - 22 * u;
+  ctx.fillStyle = tone('#1f3150'); ctx.fillRect(sx - gw / 2, gy, gw, 22 * u);
+  ctx.fillStyle = `rgba(255,214,150,${.15 + lit * .45})`;
+  for (let i = 0; i < 26; i++) ctx.fillRect(sx - gw / 2 + 3 * u + i * gw / 26, gy + 4 * u, gw / 26 - 2 * u, 11 * u);
+  // V-shaped concrete struts under the ring
+  ctx.fillStyle = tone('#a9a49a');
+  for (let i = 0; i < 14; i++) { const fx = sx - w * .46 + i * w * .92 / 13;
+    ctx.beginPath(); ctx.moveTo(fx - 6 * u, gy - 2 * u); ctx.lineTo(fx, gy + 10 * u); ctx.lineTo(fx + 6 * u, gy - 2 * u); ctx.fill(); }
+  // the thick cantilevered ring
+  const ry = gy - 9 * u;
+  ctx.fillStyle = tone('#d8d4cc'); ctx.beginPath(); ctx.moveTo(sx - w / 2, ry + 4 * u); ctx.lineTo(sx - w / 2 + 6 * u, ry); ctx.lineTo(sx + w / 2 - 6 * u, ry); ctx.lineTo(sx + w / 2, ry + 4 * u); ctx.lineTo(sx + w / 2 - 4 * u, ry + 9 * u); ctx.lineTo(sx - w / 2 + 4 * u, ry + 9 * u); ctx.closePath(); ctx.fill();
+  ctx.fillStyle = tone('#9d988e'); ctx.fillRect(sx - w / 2 + 4 * u, ry + 7 * u, w - 8 * u, 2 * u);
+  // folded-plate dome: bright and dark lens-shaped folds radiating up, with a scalloped edge
+  const dw = w * .94, dh = 44 * u, dy = ry;
+  const dome = new Path2D(); dome.moveTo(sx - dw / 2, dy); dome.bezierCurveTo(sx - dw * .42, dy - dh * 1.05, sx + dw * .42, dy - dh * 1.05, sx + dw / 2, dy); dome.closePath();
+  ctx.fillStyle = tone('#f4f4f2'); ctx.fill(dome);
+  ctx.save(); ctx.clip(dome);
+  const folds = 22;
+  for (let i = 0; i < folds; i++) {
+    const f0 = i / folds, f1 = (i + .5) / folds, xs = sx - dw / 2 + f0 * dw, xe = sx - dw / 2 + f1 * dw;
+    ctx.fillStyle = tone(i % 2 ? '#dcdcd8' : '#c9cac6');
+    ctx.beginPath(); ctx.moveTo(xs, dy + 2); ctx.lineTo(xe, dy + 2); ctx.lineTo(sx + (xe - sx) * .12, dy - dh); ctx.lineTo(sx + (xs - sx) * .12, dy - dh); ctx.fill();
+  }
+  ctx.restore();
+  ctx.fillStyle = tone('#f4f4f2');
+  for (let i = 0; i < folds; i++) { const xm = sx - dw / 2 + (i + .5) * dw / folds; ctx.beginPath(); ctx.ellipse(xm, dy, dw / folds / 2, 2.4 * u, 0, Math.PI, 0); ctx.fill(); }
+  // entrance pavilions with their hipped roofs, and a Block I for Illini basketball
+  [-1, 0, 1].forEach(k => {
+    const px = sx + k * 26 * u;
+    ctx.fillStyle = tone('#c9b79a'); ctx.fillRect(px - 9 * u, base - 18 * u, 18 * u, 18 * u);
+    ctx.fillStyle = tone('#b3a283'); ctx.beginPath(); ctx.moveTo(px - 11 * u, base - 18 * u); ctx.lineTo(px, base - 26 * u); ctx.lineTo(px + 11 * u, base - 18 * u); ctx.fill();
+  });
+  ctx.fillStyle = '#13294B'; ctx.fillRect(sx - 6 * u, base - 15 * u, 12 * u, 12 * u);
   ctx.fillStyle = '#E84A27';
-  ctx.fillRect(sx - 6 * u, base - 20 * u, 12 * u, 3 * u); ctx.fillRect(sx - 2 * u, base - 17 * u, 4 * u, 8 * u); ctx.fillRect(sx - 6 * u, base - 9 * u, 12 * u, 3 * u);
+  ctx.fillRect(sx - 4 * u, base - 13.5 * u, 8 * u, 2 * u); ctx.fillRect(sx - 1.4 * u, base - 11.5 * u, 2.8 * u, 5 * u); ctx.fillRect(sx - 4 * u, base - 6.5 * u, 8 * u, 2 * u);
+  ctx.restore();
+}
+function bellTower(L, cx, p) { // McFarland Memorial Bell Tower on the south quad
+  const sx = onMid(L, cx, CAMPUS.bell), wp = weights(CAMPUS.bell)[2];
+  if (wp < .3 || sx < -80 || sx > W + 80) return;
+  const u = uiucScale() * 1.3, base = campusGround(L, cx, sx, 14 * u);
+  const brick = css(mix(hex('#8a4a36'), L.col, .4)), stone = css(mix(hex('#c9b99a'), L.col, .4)), roof = css(mix(hex('#4f7d6a'), L.col, .35));
+  const tw = 18 * u, th = 92 * u;
+  ctx.save(); ctx.globalAlpha = wp;
+  ctx.fillStyle = stone; ctx.fillRect(sx - tw / 2 - 2 * u, base - 6 * u, tw + 4 * u, 6 * u);
+  ctx.fillStyle = brick; ctx.fillRect(sx - tw / 2, base - th, tw, th - 6 * u);
+  ctx.fillStyle = stone; [.3, .62].forEach(f => ctx.fillRect(sx - tw / 2, base - th * f, tw, 2 * u)); ctx.fillRect(sx - tw / 2 - 1.5 * u, base - th - 3 * u, tw + 3 * u, 4 * u);
+  ctx.fillStyle = 'rgba(18,14,22,.92)'; // open belfry arches
+  [-1, 1].forEach(k => { const ax = sx + k * 4 * u - 2.5 * u; ctx.beginPath(); ctx.moveTo(ax, base - th + 22 * u); ctx.lineTo(ax, base - th + 10 * u); ctx.arc(ax + 2.5 * u, base - th + 10 * u, 2.5 * u, Math.PI, 0); ctx.lineTo(ax + 5 * u, base - th + 22 * u); ctx.fill(); });
+  ctx.fillStyle = roof; ctx.beginPath(); ctx.moveTo(sx - tw / 2 - 2 * u, base - th - 3 * u); ctx.lineTo(sx, base - th - 22 * u); ctx.lineTo(sx + tw / 2 + 2 * u, base - th - 3 * u); ctx.fill();
+  const lit = smooth(.78, .86, p); // the clock face glows at night
+  ctx.fillStyle = `rgba(255,236,190,${.35 + lit * .6})`; ctx.beginPath(); ctx.arc(sx, base - th * .78, 3.6 * u, 0, 7); ctx.fill();
+  ctx.restore();
+}
+function quadLawn(L, cx, p) { // the Main Quad in front of Altgeld, with its crossing walkways
+  const x0 = onMid(L, cx, CAMPUS.altgeld) - 70 * uiucScale(), x1 = onMid(L, cx, CAMPUS.bell) + 20 * uiucScale(), wp = weights(CAMPUS.altgeld)[2];
+  if (wp < .3 || x1 < -50 || x0 > W + 50) return;
+  const top = campusGround(L, cx, (x0 + x1) / 2, (x1 - x0) / 2) - 1, bot = top + H * .06, mid = (x0 + x1) / 2, inset = (x1 - x0) * .12;
+  ctx.save(); ctx.globalAlpha = wp;
+  ctx.fillStyle = css(mix([74, 112, 62], L.col, .55));
+  ctx.beginPath(); ctx.moveTo(x0 + inset, top); ctx.lineTo(x1 - inset, top); ctx.lineTo(x1, bot); ctx.lineTo(x0, bot); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = css(mix([226, 220, 204], L.col, .35), .85); ctx.lineWidth = 1.4;
+  ctx.beginPath();
+  ctx.moveTo(x0 + inset, top); ctx.lineTo(x1, bot); ctx.moveTo(x1 - inset, top); ctx.lineTo(x0, bot);      // the diagonal walks
+  ctx.moveTo(mid, top); ctx.lineTo(mid, bot);                                                               // center walk
+  ctx.moveTo((x0 + x0 + inset) / 2, (top + bot) / 2); ctx.lineTo((x1 + x1 - inset) / 2, (top + bot) / 2); // cross walk
+  ctx.stroke();
+  ctx.fillStyle = css(mix([40, 70, 44], L.col, .5)); // a few trees along the edges
+  for (let i = 0; i < 8; i++) { const f = i / 7, tx = lerp(x0 + inset, x1 - inset, f), ty = top + 2; ctx.beginPath(); ctx.arc(tx, ty - 4, 4.5, 0, 7); ctx.fill(); }
   ctx.restore();
 }
 function cornField(L, cx, p) { // rows of tall corn across the Illinois foreground, swaying a little
