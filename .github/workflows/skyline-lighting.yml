@@ -1,0 +1,35 @@
+name: Sync skyline lighting
+
+# Every morning, read BOMA/Chicago's Illuminate Chicago list and update lighting.json
+# on the branch GitHub Pages publishes from, so the site's skyline matches the real one.
+on:
+  schedule:
+    - cron: "17 11 * * *" # about 5-6 a.m. in Chicago
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        branch: [prod, main]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.branch }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Update lighting.json from BOMA/Chicago
+        run: python scripts/update_lighting.py
+      - name: Commit if changed
+        run: |
+          if git diff --quiet -- lighting.json; then echo "No changes"; exit 0; fi
+          git config user.name "skyline-sync[bot]"
+          git config user.email "skyline-sync@users.noreply.github.com"
+          git add lighting.json
+          git commit -m "Sync skyline lighting from BOMA/Chicago"
+          git push

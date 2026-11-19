@@ -1037,22 +1037,73 @@ function cityLights(L, p, cx) {
 }
 
 /* ---------- the real skyline, seen from the lakefront, lit for tonight's cause ---------- */
-// Tonight's color comes from BOMA/Chicago's Illuminate Chicago schedule (month, day ranges; later entries win).
-const LIGHTING = [
-  {from: [10, 30], to: [11, 1], color: '#FF8A2A', cause: 'Halloween'},
-  {from: [11, 2], to: [11, 8], color: '#1FB5AD', cause: "Alzheimer's awareness"},
-  {from: [11, 14], to: [11, 20], color: '#3D7BFF', cause: "Children's Grief Awareness"},
-  {from: [11, 19], to: [11, 21], color: '#9B4DFF', cause: 'Pancreatic Cancer Awareness'},
-  {from: [12, 14], to: [12, 31], color: '#3D7BFF', cause: 'the holiday season'},
-  {from: [1, 1], to: [1, 3], color: '#3D7BFF', cause: 'the holiday season'},
-];
-const tonight = (() => {
-  const d = new Date(), md = (d.getMonth() + 1) * 100 + d.getDate();
-  let pick = null;
-  LIGHTING.forEach(e => { if (md >= e.from[0] * 100 + e.from[1] && md <= e.to[0] * 100 + e.to[1]) pick = e; });
-  return pick || {color: '#FFD9A0', cause: null};
-})();
-const ACCENT = hex(tonight.color);
+// Tonight's colors follow BOMA/Chicago's Illuminate Chicago program, which coordinates the downtown
+// skyline lighting. lighting.json is refreshed daily from BOMA's live list by a GitHub Action; the
+// built-in calendar below covers the rest of the year. When several causes overlap, the shortest
+// (most specific) one wins, the way a one-day observance outranks a month-long one.
+const RAINBOW = ['#E40303', '#FF8C00', '#FFED00', '#008026', '#004DFF', '#750787'];
+const RWB = ['#E4243B', '#F6F8FC', '#2C5BD6'];
+function nthWeekday(y, m, wd, n) { // n-th weekday of a month (n = -1 for the last one)
+  if (n > 0) { const d = new Date(y, m - 1, 1); d.setDate(1 + (wd - d.getDay() + 7) % 7 + (n - 1) * 7); return d; }
+  const d = new Date(y, m, 0); d.setDate(d.getDate() - (d.getDay() - wd + 7) % 7); return d;
+}
+function builtinCalendar(y) {
+  const D = (m, d, yy = y) => new Date(yy, m - 1, d), add = (dt, n) => new Date(dt.getFullYear(), dt.getMonth(), dt.getDate() + n);
+  const memorial = nthWeekday(y, 5, 1, -1), labor = nthWeekday(y, 9, 1, 1);
+  return [
+    // posted by BOMA/Chicago now
+    {start: D(12, 14, y - 1), end: D(1, 3), cause: 'the holiday season and New Year', colors: ['#2C6BFF']},
+    {start: D(12, 14), end: D(1, 3, y + 1), cause: 'the holiday season and New Year', colors: ['#2C6BFF']},
+    {start: D(2, 23), end: D(2, 28), cause: 'Dominican Cultural Heritage', colors: ['#E4243B', '#2C5BD6', '#F6F8FC']},
+    {start: D(5, 1), end: D(5, 6), cause: 'Lyme Disease Awareness', colors: ['#2FBF5B']},
+    {start: D(11, 14), end: D(11, 20), cause: "Children's Grief Awareness", colors: ['#2C6BFF']},
+    {start: D(11, 19), end: D(11, 21), cause: 'Pancreatic Cancer Awareness', colors: ['#9B4DFF']},
+    // confirmed 2026 campaigns that recur
+    {start: D(1, 7), end: D(1, 31), cause: 'Dry January', colors: ['#FFD21F']},
+    {start: D(9, 19), end: D(9, 25), cause: "Alzheimer's awareness", colors: ['#9B4DFF']},
+    {start: D(9, 30), end: D(9, 30), cause: 'the Chicago Police Memorial', colors: ['#2C6BFF']},
+    {start: D(10, 16), end: D(11, 2), cause: 'the Loop Arts District', colors: ['#B3DDF2', '#E4243B']},
+    {start: D(10, 30), end: D(11, 1), cause: 'Halloween', colors: ['#FF8A2A']},
+    {start: D(11, 2), end: D(11, 8), cause: "Alzheimer's awareness (Light the World in Teal)", colors: ['#1FB5AD']},
+    // annual observances from BOMA's yearly calendar
+    {start: D(5, 6), end: D(5, 12), cause: 'Lung Force', colors: ['#2EC4C9']},
+    {start: add(memorial, -4), end: add(memorial, 2), cause: 'EMS Week', colors: ['#2C6BFF']},
+    {start: add(memorial, -3), end: memorial, cause: 'Memorial Day', colors: ['#E4243B']},
+    {start: D(6, 1), end: D(6, 30), cause: 'Pride Month', colors: RAINBOW},
+    {start: D(6, 17), end: D(6, 19), cause: 'Juneteenth', colors: ['#E4243B']},
+    {start: D(7, 1), end: D(7, 5), cause: 'Independence Day', colors: RWB},
+    {start: add(labor, -3), end: labor, cause: 'Labor Day', colors: RWB},
+    {start: D(9, 15), end: D(10, 15), cause: 'Hispanic Heritage Month', colors: ['#FF8A2A']},
+    {start: D(10, 1), end: D(10, 31), cause: 'Breast Cancer Awareness Month', colors: ['#FF6FB5']},
+  ];
+}
+function pickTonight(entries, now = new Date()) {
+  const day = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  let best = null;
+  entries.forEach(e => {
+    const s0 = +e.start, e0 = +e.end;
+    if (day >= s0 && day <= e0 && (!best || e0 - s0 < +best.end - +best.start)) best = e;
+  });
+  return best;
+}
+let tonight = pickTonight(builtinCalendar(new Date().getFullYear())) || {colors: ['#FFD9A0'], cause: null};
+let ACCENTS = tonight.colors.map(hex);
+function showTonight() {
+  const el = document.getElementById('tonight');
+  if (!tonight.cause) { el.hidden = true; return; }
+  el.style.setProperty('--c', tonight.colors[0]);
+  el.innerHTML = `<i></i>Tonight the skyline is lit for ${tonight.cause}, matching Chicago's real building lights.`;
+  el.hidden = false;
+}
+fetch('lighting.json', {cache: 'no-store'}).then(r => r.ok ? r.json() : null).then(list => {
+  if (!Array.isArray(list)) return;
+  const parse = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+  const live = list.filter(e => e.start && e.end && Array.isArray(e.colors) && e.colors.length)
+    .map(e => ({start: parse(e.start), end: parse(e.end), cause: e.cause, colors: e.colors}));
+  const pick = pickTonight([...live, ...builtinCalendar(new Date().getFullYear())]);
+  if (pick) { tonight = pick; ACCENTS = pick.colors.map(hex); showTonight(); }
+}).catch(() => {});
+
 // Heights in feet (roof, plus antenna or spire), order and spacing as seen from the south lakefront.
 const SKYLINE = [
   {name: '311 S Wacker', at: .02, w: 150, h: 961, kind: 'crown'},
@@ -1106,6 +1157,7 @@ function drawSkyline(L, p, cx) {
   const span = W * SKY_SPAN, body = css(L.col.map(v => v * .92));
   const blink = reduce ? 1 : (Math.sin(performance.now() / 420) > .2 ? 1 : .2);
   SKYLINE.forEach((b, i) => {
+    const ACCENT = ACCENTS[i % ACCENTS.length];
     const x = mid + (b.at - .5) * span, base = L.base + 2;
     const {path, w, h, l} = towerPath(b, x, base, sc);
     if (l > W + 20 || l + w < -20) return;
@@ -1322,12 +1374,7 @@ function frame(t) {
 }
 
 build(); resize(); measure();
-if (tonight.cause) {
-  const el = document.getElementById('tonight');
-  el.style.setProperty('--c', tonight.color);
-  el.innerHTML = `<i></i>The skyline is lit ${tonight.cause === 'Halloween' || tonight.cause === 'the holiday season' ? 'for ' : 'for '}${tonight.cause} tonight, matching Chicago's real building lights.`;
-  el.hidden = false;
-}
+showTonight();
 addEventListener('resize', () => { resize(); measure(); });
 addEventListener('load', measure);
 if (document.fonts) document.fonts.ready.then(measure);
