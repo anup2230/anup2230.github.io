@@ -508,20 +508,40 @@ function drawSatellites(p, t) {
   });
 }
 
-/* ---------- comet trail behind the pointer while in space ---------- */
+/* ---------- comet trail behind the pointer (or finger) under the night sky ---------- */
 const comet = [];
-let cometOn = matchMedia('(pointer: fine)').matches && !reduce;
-if (cometOn) addEventListener('pointermove', e => { comet.push({x: e.clientX, y: e.clientY, t: performance.now()}); if (comet.length > 40) comet.shift(); });
+const cometOn = !reduce;
+function cometAdd(x, y) { comet.push({x, y, t: performance.now()}); if (comet.length > 80) comet.shift(); }
+if (cometOn) {
+  addEventListener('pointermove', e => cometAdd(e.clientX, e.clientY), {passive: true});
+  addEventListener('touchmove', e => { const t0 = e.touches[0]; if (t0) cometAdd(t0.clientX, t0.clientY); }, {passive: true});
+}
 function drawComet(p, t) {
-  const vis = 1 - smooth(.1, .2, p);
-  if (!cometOn || vis <= 0) return;
-  while (comet.length && t - comet[0].t > 600) comet.shift();
-  for (let i = 0; i < comet.length; i++) {
-    const c = comet[i], age = (t - c.t) / 600, a = (1 - age) * vis, r = 1 + (1 - age) * 3.5;
-    const g = ctx.createRadialGradient(c.x, c.y, 0, c.x, c.y, r * 3);
-    g.addColorStop(0, `rgba(210,228,255,${a * .9})`); g.addColorStop(1, 'rgba(210,228,255,0)');
-    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(c.x, c.y, r * 3, 0, 7); ctx.fill();
+  const vis = Math.max(1 - smooth(.12, .22, p), smooth(.86, .93, p));
+  while (comet.length && t - comet[0].t > 900) comet.shift();
+  if (!cometOn || vis <= 0 || comet.length < 2) return;
+  ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.lineCap = 'round';
+  // tapered tail
+  for (let i = 1; i < comet.length; i++) {
+    const a = comet[i - 1], b = comet[i], f = 1 - (t - b.t) / 900;
+    if (f <= 0) continue;
+    ctx.strokeStyle = `rgba(150,195,255,${f * .55 * vis})`; ctx.lineWidth = 2 + f * 9;
+    ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+    ctx.strokeStyle = `rgba(255,255,255,${f * .8 * vis})`; ctx.lineWidth = 1 + f * 3;
+    ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+    if (hash(b.t) > .82) { // sparks shed off the tail
+      const sx = b.x + (hash(b.t + 1) - .5) * 26 * (1 - f), sy = b.y + (hash(b.t + 2) - .5) * 26 * (1 - f);
+      ctx.fillStyle = `rgba(255,236,190,${f * vis})`; ctx.beginPath(); ctx.arc(sx, sy, 1.4, 0, 7); ctx.fill();
+    }
   }
+  // glowing head, only while the pointer is moving
+  const h = comet[comet.length - 1], hf = 1 - (t - h.t) / 900;
+  if (hf > 0) {
+    const g = ctx.createRadialGradient(h.x, h.y, 0, h.x, h.y, 22);
+    g.addColorStop(0, `rgba(255,255,255,${hf * vis})`); g.addColorStop(.3, `rgba(170,210,255,${hf * .6 * vis})`); g.addColorStop(1, 'rgba(170,210,255,0)');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(h.x, h.y, 22, 0, 7); ctx.fill();
+  }
+  ctx.restore();
 }
 
 function drawStars(p, t) {
