@@ -1186,6 +1186,98 @@ function lakefront(layers, p, cx) {
     ctx.fillStyle = g; ctx.fillRect(x - rr, y - rr, rr * 2, rr * 2);
     ctx.fillStyle = `rgba(255,236,200,${a * (flood ? .35 : .18)})`; ctx.fillRect(x - 1, wy + 2, 2, flood ? 26 : 12); // shimmer in the water
   }
+  drawNavyPier(mid + (.8 - .5) * span, wy, a, t);
+}
+
+/* ---------- Navy Pier and the Centennial Wheel ---------- */
+let pier = null;
+function drawNavyPier(px, wy, a, t) {
+  const k = H * .4 / 1451 * clamp(W / H / 1.6, .7, 1.1);
+  const len = 3300 * k * .9, x0 = px - len * .35;          // the pier runs out into the lake, seen side-on
+  ctx.save(); ctx.globalAlpha = a;
+  ctx.fillStyle = '#0d1326'; ctx.fillRect(x0, wy - 5, len, 7);                      // deck
+  ctx.fillRect(x0 + len * .02, wy - 16, len * .2, 12);                              // Festival Hall
+  ctx.beginPath(); ctx.ellipse(x0 + len * .9, wy - 5, len * .07, 15, 0, Math.PI, 0); ctx.fill(); // the Aon Grand Ballroom dome at the end
+  for (let i = 0; i < 40; i++) { ctx.fillStyle = `rgba(255,${210 + (hash(i) * 40 | 0)},150,.85)`; ctx.fillRect(x0 + (i + .5) * len / 40, wy - 4, 2, 2); }
+  // the Centennial Wheel
+  const r = 196 * k * 1.15, cx = px, cy = wy - r - 8 * k * 1.15;
+  ctx.strokeStyle = '#2a3150'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(cx - r * .45, wy - 4); ctx.lineTo(cx, cy); ctx.lineTo(cx + r * .45, wy - 4); ctx.stroke(); // A-frame legs
+  const spin = reduce ? 0 : t / 9000;
+  ctx.strokeStyle = 'rgba(140,200,255,.55)'; ctx.lineWidth = 1;
+  for (let i = 0; i < 20; i++) { const an = spin + i * Math.PI / 10; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(an) * r, cy + Math.sin(an) * r); ctx.stroke(); }
+  ctx.strokeStyle = 'rgba(190,225,255,.95)'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(cx, cy, r, 0, 7); ctx.stroke();
+  for (let i = 0; i < 40; i++) { // gondolas
+    const an = spin + i * Math.PI / 20;
+    ctx.fillStyle = css(ACCENTS[i % ACCENTS.length], .9); ctx.fillRect(cx + Math.cos(an) * r - 1.5, cy + Math.sin(an) * r - 1.5, 3, 3);
+  }
+  ctx.fillStyle = 'rgba(255,240,210,.9)'; ctx.beginPath(); ctx.arc(cx, cy, 2.5, 0, 7); ctx.fill();
+  ctx.restore();
+  // its reflection in the lake
+  ctx.save(); ctx.globalAlpha = a * .25; ctx.strokeStyle = 'rgba(190,225,255,1)'; ctx.lineWidth = 1.5;
+  for (let k2 = 0; k2 < 6; k2++) { const yy = wy + 6 + k2 * 6, ww = r * 1.6 * (1 - k2 * .12); ctx.beginPath(); ctx.moveTo(cx - ww / 2 + Math.sin(t / 500 + k2) * 3, yy); ctx.lineTo(cx + ww / 2 + Math.sin(t / 500 + k2) * 3, yy); ctx.stroke(); }
+  ctx.restore();
+  pier = {x: px, y: wy - 6, w: len, k, a};
+}
+
+/* ---------- fireworks over Navy Pier, once you reach the bottom ---------- */
+const fw = {rockets: [], sparks: [], flashes: [], next: 0, on: false};
+const FW_COLORS = [[255, 214, 120], [255, 255, 255], [255, 80, 90], [90, 200, 255], [120, 255, 160], [255, 130, 230]];
+function launch(t) {
+  const k = clamp(W / 1440, .6, 1.2);
+  const x = pier.x + (Math.random() - .5) * W * .3;
+  fw.rockets.push({x, y: pier.y, vx: (Math.random() - .5) * .6, vy: -(7.5 + Math.random() * 2.5) * Math.sqrt(H / 900),
+    apex: H * (.12 + Math.random() * .22), c: Math.random() < .35 ? ACCENTS[Math.floor(Math.random() * ACCENTS.length)] : FW_COLORS[Math.floor(Math.random() * FW_COLORS.length)],
+    kind: ['peony', 'peony', 'ring', 'willow', 'crackle'][Math.floor(Math.random() * 5)], k});
+}
+function burst(r) {
+  const n = r.kind === 'ring' ? 46 : r.kind === 'willow' ? 70 : 90, sp = (r.kind === 'willow' ? 3.8 : 5.4) * r.k * Math.sqrt(H / 900);
+  for (let i = 0; i < n; i++) {
+    const an = r.kind === 'ring' ? i / n * Math.PI * 2 : Math.random() * Math.PI * 2;
+    const v = r.kind === 'ring' ? sp : sp * (.35 + Math.random() * .65);
+    fw.sparks.push({x: r.x, y: r.y, px: r.x, py: r.y, vx: Math.cos(an) * v, vy: Math.sin(an) * v,
+      life: 1, decay: r.kind === 'willow' ? .007 + Math.random() * .004 : .012 + Math.random() * .01,
+      c: r.kind === 'willow' ? [255, 196, 110] : r.c, drag: r.kind === 'willow' ? .978 : .968, g: r.kind === 'willow' ? .03 : .045,
+      crackle: r.kind === 'crackle'});
+  }
+  fw.flashes.push({x: r.x, y: r.y, life: 1, c: r.c});
+}
+function drawFireworks(t, dt) {
+  const bottom = scrollY + innerHeight >= document.documentElement.scrollHeight - 40;
+  fw.on = bottom && !reduce && pier && pier.a > .5;
+  if (fw.on && t > fw.next) { launch(t); if (Math.random() < .3) launch(t); fw.next = t + 260 + Math.random() * 520; }
+  if (!fw.rockets.length && !fw.sparks.length && !fw.flashes.length) return;
+  const s = dt / 16.7;
+  ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.lineCap = 'round';
+  fw.rockets = fw.rockets.filter(r => {
+    const ox = r.x, oy = r.y; r.x += r.vx * s; r.y += r.vy * s; r.vy += .07 * s;
+    ctx.strokeStyle = 'rgba(255,220,170,.8)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(ox, oy + 6); ctx.lineTo(r.x, r.y); ctx.stroke();
+    if (r.y <= r.apex || r.vy >= -.5) { burst(r); return false; }
+    return true;
+  });
+  fw.flashes = fw.flashes.filter(f => {
+    f.life -= .06 * s;
+    const g = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, 140);
+    g.addColorStop(0, css(f.c, .35 * f.life)); g.addColorStop(1, css(f.c, 0));
+    ctx.fillStyle = g; ctx.fillRect(f.x - 140, f.y - 140, 280, 280);
+    if (pier) { // glow on the water under the burst
+      const wg = ctx.createRadialGradient(f.x, pier.y + 30, 0, f.x, pier.y + 30, 160);
+      wg.addColorStop(0, css(f.c, .18 * f.life)); wg.addColorStop(1, css(f.c, 0));
+      ctx.fillStyle = wg; ctx.fillRect(f.x - 160, pier.y, 320, 120);
+    }
+    return f.life > 0;
+  });
+  fw.sparks = fw.sparks.filter(p => {
+    p.px = p.x; p.py = p.y;
+    p.vx *= Math.pow(p.drag, s); p.vy = p.vy * Math.pow(p.drag, s) + p.g * s;
+    p.x += p.vx * s; p.y += p.vy * s; p.life -= p.decay * s;
+    const al = Math.max(0, p.life) * (p.crackle && p.life < .5 ? (Math.random() > .5 ? 1 : 0) : 1);
+    ctx.strokeStyle = css(p.c, al); ctx.lineWidth = 1.6 + p.life;
+    ctx.beginPath(); ctx.moveTo(p.px, p.py); ctx.lineTo(p.x, p.y); ctx.stroke();
+    return p.life > 0 && p.y < H;
+  });
+  ctx.restore();
 }
 
 function drawSkyline(L, p, cx) {
@@ -1416,6 +1508,7 @@ function frame(t) {
   drawBalloon(p);
   drawClouds(p, t, 'front');
   drawSkydiver(p, t);
+  drawFireworks(t, Math.min(50, t - (frame.last || t))); frame.last = t;
   drawFog(p);
   drawStorm(p, t);
   drawProviders(p, t);
