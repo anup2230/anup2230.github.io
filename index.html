@@ -1660,34 +1660,63 @@ function stateFarmCenter(L, cx, p) { // the saucer: folded-plate dome on a canti
   ctx.fillRect(sx - 4 * u, base - 13.5 * u, 8 * u, 2 * u); ctx.fillRect(sx - 1.4 * u, base - 11.5 * u, 2.8 * u, 5 * u); ctx.fillRect(sx - 4 * u, base - 6.5 * u, 8 * u, 2 * u);
   ctx.restore();
 }
-function grainger(L, cx, p) { // Grainger Engineering Library on the Bardeen Quad, lit late for studying
+function grainger(L, cx, p) { // Grainger Engineering Library: brick wings with steep zinc roofs, chimneys and half-round dormers
   const sx = onMid(L, cx, CAMPUS.grainger), wp = weights(CAMPUS.grainger)[2];
-  if (wp < .3 || sx < -200 || sx > W + 200) return;
-  const u = uiucScale() * 1.15, w = 128 * u, h = 44 * u, base = campusGround(L, cx, sx, w / 2 + 4 * u);
-  const brick = css(mix(hex('#8c3f2c'), L.col, .38)), stone = css(mix(hex('#d6c8a8'), L.col, .4)), roof = css(mix(hex('#3f4f58'), L.col, .4));
-  const lit = smooth(.78, .86, p), l = sx - w / 2;
+  if (wp < .3 || sx < -220 || sx > W + 220) return;
+  const u = uiucScale() * 1.15, w = 170 * u, h = 38 * u, l = sx - w / 2;
+  const base = campusGround(L, cx, sx, w / 2 + 4 * u);
+  const col = c => css(mix(hex(c), L.col, .36));
+  const brick = col('#a5482f'), brickDark = col('#7d3522'), stone = col('#e2d6bf'), zinc = col('#7f9a95'), zincDark = col('#5f7774');
+  const lit = smooth(.78, .86, p), glow = (k = 1) => `rgba(255,212,145,${(.25 + lit * .7) * k})`;
+  const top = base - h;
+  const wingL = [l, l + w * .3], wingR = [l + w * .8, l + w], mid = [wingL[1], wingR[0]];
   ctx.save(); ctx.globalAlpha = wp;
-  ctx.fillStyle = stone; ctx.fillRect(l - 2 * u, base - 4 * u, w + 4 * u, 4 * u);                     // plinth
-  ctx.fillStyle = brick; ctx.fillRect(l, base - h, w, h - 4 * u);                                    // long brick wings
-  ctx.fillStyle = roof; ctx.beginPath(); ctx.moveTo(l - 3 * u, base - h); ctx.lineTo(l + 8 * u, base - h - 10 * u); ctx.lineTo(l + w - 8 * u, base - h - 10 * u); ctx.lineTo(l + w + 3 * u, base - h); ctx.fill();
-  ctx.fillStyle = stone; [.36, .68].forEach(f => ctx.fillRect(l, base - h * f, w, 1.6 * u)); ctx.fillRect(l, base - h, w, 2 * u);
-  // central entrance pavilion: taller gable with a big arched window
-  const pw = 34 * u, ph = h + 16 * u, px = sx - pw / 2;
-  ctx.fillStyle = brick; ctx.fillRect(px, base - ph, pw, ph - 4 * u);
-  ctx.fillStyle = roof; ctx.beginPath(); ctx.moveTo(px - 3 * u, base - ph); ctx.lineTo(sx, base - ph - 16 * u); ctx.lineTo(px + pw + 3 * u, base - ph); ctx.fill();
-  ctx.fillStyle = stone; ctx.fillRect(px, base - ph, pw, 2 * u); ctx.fillRect(px + 2 * u, base - 4 * u - 14 * u, pw - 4 * u, 2 * u);
-  ctx.fillStyle = `rgba(255,${206},140,${.3 + lit * .65})`;
-  ctx.beginPath(); ctx.moveTo(sx - 10 * u, base - 22 * u); ctx.lineTo(sx - 10 * u, base - ph + 18 * u); ctx.arc(sx, base - ph + 18 * u, 10 * u, Math.PI, 0); ctx.lineTo(sx + 10 * u, base - 22 * u); ctx.fill();
-  ctx.strokeStyle = stone; ctx.lineWidth = 1 * u; ctx.beginPath(); ctx.moveTo(sx, base - 22 * u); ctx.lineTo(sx, base - ph + 8 * u); ctx.moveTo(sx - 10 * u, base - ph + 22 * u); ctx.lineTo(sx + 10 * u, base - ph + 22 * u); ctx.stroke();
-  ctx.fillStyle = 'rgba(30,24,30,.9)'; ctx.fillRect(sx - 5 * u, base - 14 * u, 10 * u, 10 * u);   // doors
-  // rows of windows on three floors, most of them lit
-  for (let fl = 0; fl < 3; fl++) for (let i = 0; i < 12; i++) {
-    const wx = l + 5 * u + i * 10 * u;
-    if (wx + 5 * u > px - 2 * u && wx < px + pw + 2 * u) continue;
-    const on = hash(i * 13 + fl * 7) > .2;
-    ctx.fillStyle = on ? `rgba(255,${214 + (hash(i + fl) * 30 | 0)},150,${.25 + lit * .7})` : 'rgba(30,26,36,.85)';
-    ctx.fillRect(wx, base - 10 * u - fl * 12 * u, 5 * u, 7 * u);
-  }
+  // center roof: a long low zinc slope with its strip of skylights
+  ctx.fillStyle = zinc;
+  ctx.beginPath(); ctx.moveTo(mid[0], top); ctx.lineTo(mid[0] + 6 * u, top - 11 * u); ctx.lineTo(mid[1] - 6 * u, top - 11 * u); ctx.lineTo(mid[1], top); ctx.fill();
+  ctx.fillStyle = 'rgba(25,32,44,.9)';
+  for (let i = 0; i < 16; i++) ctx.fillRect(mid[0] + 10 * u + i * (mid[1] - mid[0] - 20 * u) / 16, top - 4.5 * u, (mid[1] - mid[0] - 20 * u) / 16 - 1, 2.4 * u);
+  // the two wings: steep hipped roofs, chimneys and a big half-round dormer each
+  [[wingL, 34, .34], [wingR, 28, .5]].forEach(([[a, b], rh, chimneyAt]) => {
+    const rw = b - a, ridge = top - rh * u;
+    const cxw = a + rw * chimneyAt;
+    ctx.fillStyle = brick; ctx.fillRect(cxw - 4 * u, ridge - 14 * u, 8 * u, 16 * u);                  // chimney
+    ctx.fillStyle = stone; ctx.fillRect(cxw - 4.6 * u, ridge - 14 * u, 9.2 * u, 1.6 * u);
+    ctx.fillStyle = zinc; ctx.beginPath(); ctx.moveTo(a - 3 * u, top); ctx.lineTo(a + rw * .28, ridge); ctx.lineTo(b - rw * .28, ridge); ctx.lineTo(b + 3 * u, top); ctx.fill();
+    ctx.strokeStyle = zincDark; ctx.lineWidth = .8;                                                    // standing seams
+    for (let x = a + 4 * u; x < b; x += 4 * u) { ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(lerp(x, (a + b) / 2, .25), ridge + 2); ctx.stroke(); }
+    const dx = (a + b) / 2, dy = top - 1 * u, dr = Math.min(rw * .2, 12 * u);                        // half-round dormer
+    ctx.fillStyle = brickDark; ctx.beginPath(); ctx.arc(dx, dy, dr + 2 * u, Math.PI, 0); ctx.fill();
+    ctx.fillStyle = glow(); ctx.beginPath(); ctx.arc(dx, dy, dr, Math.PI, 0); ctx.fill();
+    ctx.strokeStyle = stone; ctx.lineWidth = 1; ctx.beginPath();
+    for (let k = -2; k <= 2; k++) { ctx.moveTo(dx + k * dr / 3, dy); ctx.lineTo(dx + k * dr / 3, dy - Math.sqrt(Math.max(0, dr * dr - (k * dr / 3) ** 2))); }
+    ctx.stroke();
+  });
+  // brick walls
+  ctx.fillStyle = brick; ctx.fillRect(l, top, w, h);
+  // diamond lattice on the wings
+  ctx.save(); ctx.beginPath(); ctx.rect(wingL[0], top, wingL[1] - wingL[0], h * .62); ctx.rect(wingR[0], top, wingR[1] - wingR[0], h * .62); ctx.clip();
+  ctx.strokeStyle = brickDark; ctx.lineWidth = .9;
+  for (let x = l - h; x < l + w + h; x += 7 * u) { ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x + h, top + h); ctx.moveTo(x + h, top); ctx.lineTo(x, top + h); ctx.stroke(); }
+  ctx.restore();
+  // limestone cornice and band, with the wings stepping forward
+  ctx.fillStyle = stone;
+  ctx.fillRect(l - 1.5 * u, top - 1.5 * u, w + 3 * u, 3 * u); ctx.fillRect(l, base - h * .38, w, 1.6 * u); ctx.fillRect(l - 1 * u, base - 3 * u, w + 2 * u, 3 * u);
+  ctx.fillStyle = brickDark; ctx.fillRect(wingL[1] - 1, top, 2, h); ctx.fillRect(wingR[0] - 1, top, 2, h);
+  // windows: tall paired panes in the middle, smaller grids on the wings, arches at the left wing's base
+  const win = (x, y, ww, hh, k = 1) => { ctx.fillStyle = glow(k); ctx.fillRect(x, y, ww, hh); };
+  for (let i = 0; i < 5; i++) { const x = mid[0] + 6 * u + i * (mid[1] - mid[0] - 12 * u) / 5; win(x, top + 7 * u, 4.5 * u, 13 * u); win(x + 6 * u, top + 7 * u, 4.5 * u, 13 * u, hash(i) > .3 ? 1 : .4); win(x + 2 * u, base - 11 * u, 6 * u, 5 * u, .8); }
+  [[wingL, 2], [wingR, 1]].forEach(([[a, b], pairs]) => {
+    for (let j = 0; j < pairs; j++) { const x = a + (b - a) * (pairs === 2 ? .3 + j * .26 : .5) - 3 * u; win(x - 3.5 * u, top + 6 * u, 5 * u, 8 * u); win(x + 3.5 * u, top + 6 * u, 5 * u, 8 * u); win(x - 3.5 * u, top + 17 * u, 5 * u, 5 * u, .8); win(x + 3.5 * u, top + 17 * u, 5 * u, 5 * u, .8); }
+  });
+  for (let i = 0; i < 3; i++) { const ax = wingL[0] + 4 * u + i * (wingL[1] - wingL[0] - 8 * u) / 3, aw = (wingL[1] - wingL[0] - 8 * u) / 3 - 3 * u;
+    ctx.fillStyle = 'rgba(26,22,30,.92)'; ctx.beginPath(); ctx.moveTo(ax, base - 3 * u); ctx.lineTo(ax, base - 9 * u); ctx.quadraticCurveTo(ax + aw / 2, base - 15 * u, ax + aw, base - 9 * u); ctx.lineTo(ax + aw, base - 3 * u); ctx.fill();
+    ctx.fillStyle = glow(.6); ctx.fillRect(ax + 2 * u, base - 9 * u, aw - 4 * u, 6 * u); }
+  // the small columned entrance with its balcony
+  const ex = mid[0] + (mid[1] - mid[0]) * .45;
+  ctx.fillStyle = stone; ctx.fillRect(ex - 7 * u, base - 15 * u, 14 * u, 2.4 * u);
+  for (let i = 0; i < 4; i++) ctx.fillRect(ex - 6 * u + i * 3.8 * u, base - 13 * u, 1.4 * u, 10 * u);
+  ctx.strokeStyle = stone; ctx.lineWidth = .8; ctx.beginPath(); ctx.moveTo(ex - 7 * u, base - 18 * u); ctx.lineTo(ex + 7 * u, base - 18 * u); ctx.stroke();
   ctx.restore();
 }
 function bellTower(L, cx, p) { // McFarland Memorial Bell Tower on the south quad
