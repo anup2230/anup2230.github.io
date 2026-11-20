@@ -610,6 +610,9 @@ function landed(x, y, k, ms, t) {
   ctx.strokeStyle = 'rgba(230,236,245,.75)'; ctx.lineWidth = .8;
   if (pull < .98) [-1, -.5, .5, 1].forEach(f => { ctx.beginPath(); ctx.moveTo(cxp + f * cw / 2 * Math.cos(rot), cyp + f * cw / 2 * Math.sin(rot)); ctx.lineTo(hands[0], hands[1]); ctx.stroke(); });
   ctx.save(); ctx.translate(cxp, cyp); ctx.rotate(rot); canopyCells(cw, ch, 6 * sc * (1 - collapse * .7)); ctx.restore();
+  // 20 seconds after he starts waving, he breaks into a dance
+  const DANCE_AT = 4300 + 20000;
+  if (ms >= DANCE_AT && !reduce) { dancer(ms - DANCE_AT, t); ctx.restore(); return; }
   // the jumper standing on the shore, leaning back as he pulls
   const lean = (pull > 0 && pull < 1 ? -.12 - Math.abs(tug) * .06 : 0);
   ctx.strokeStyle = '#EEF1F6'; ctx.lineWidth = 5;
@@ -630,6 +633,57 @@ function landed(x, y, k, ms, t) {
   ctx.fillStyle = '#E2B04A'; ctx.beginPath(); ctx.ellipse(2.5, -25, 3, 4, 0, 0, 7); ctx.fill();
   ctx.restore();
   ctx.restore();
+}
+function dancer(dms, t) {
+  const beat = dms / 460, phase = beat % 1, on = Math.floor(beat), move = Math.floor(beat / 8) % 4;
+  const bounce = Math.abs(Math.sin(beat * Math.PI)) * 2.6, sway = Math.sin(beat * Math.PI) * 2.2;
+  const limb = pts => { ctx.beginPath(); pts.forEach(([a, b], i) => i ? ctx.lineTo(a, b) : ctx.moveTo(a, b)); ctx.stroke(); };
+  ctx.save();
+  if (move === 3) ctx.scale(Math.cos(((beat % 8) / 8) * Math.PI * 4) || .01, 1);            // the spin
+  ctx.translate(sway, -bounce);
+  ctx.strokeStyle = '#EEF1F6'; ctx.lineWidth = 5;
+  const hip = [0, 10], sh = [0, -6];
+  // legs
+  if (move === 2) { // running man
+    const a = on % 2 ? 1 : -1, lift = Math.sin(phase * Math.PI);
+    limb([[hip[0] - 2, hip[1]], [a * 6 * lift + 2, 17 - lift * 3], [a * 4 * lift + 1, 24 + bounce - lift * 6]]);
+    limb([[hip[0] + 2, hip[1]], [-a * 4 - 1, 17], [-a * 7 - 1, 24 + bounce]]);
+  } else {
+    const bend = on % 2 ? 1 : -1;
+    limb([[-3, hip[1]], [-5 - (bend > 0 ? 2 : 0), 17], [-6, 24 + bounce]]);
+    limb([[3, hip[1]], [5 + (bend < 0 ? 2 : 0), 17], [6, 24 + bounce]]);
+  }
+  // torso
+  ctx.lineWidth = 7; limb([hip, sh]);
+  ctx.lineWidth = 5;
+  // arms
+  if (move === 0) { // disco point: up to the sky, then down across the body
+    const up = on % 2 === 0;
+    limb([[1, -3], up ? [8, -12] : [5, 2], up ? [14, -24] : [-6, 10]]);
+    limb([[-1, -3], [-7, 2], [-3, 6]]);                                                       // hand on hip
+  } else if (move === 1) { // raise the roof
+    const pump = Math.abs(Math.sin(beat * Math.PI)) * 4;
+    limb([[1, -3], [9, -10], [8, -20 - pump]]); limb([[-1, -3], [-9, -10], [-8, -20 - pump]]);
+  } else if (move === 2) { // pumping arms
+    const a = on % 2 ? 1 : -1;
+    limb([[1, -3], [6 * a, 4], [10 * a, -2]]); limb([[-1, -3], [-6 * a, 4], [-10 * a, -2]]);
+  } else { // arms out, rippling
+    const r = Math.sin(beat * Math.PI * 2) * 3;
+    limb([[1, -3], [9, -4 + r], [17, -6 - r]]); limb([[-1, -3], [-9, -4 - r], [-17, -6 + r]]);
+  }
+  // head and visor, nodding to the beat
+  const nod = Math.sin(beat * Math.PI * 2) * 1.2;
+  ctx.fillStyle = '#EEF1F6'; ctx.beginPath(); ctx.arc(0, -14 + nod, 6, 0, 7); ctx.fill();
+  ctx.fillStyle = '#E2B04A'; ctx.beginPath(); ctx.ellipse(2.5, -14 + nod, 3, 4, 0, 0, 7); ctx.fill();
+  ctx.restore();
+  // music notes drifting up
+  ctx.fillStyle = 'rgba(255,214,150,.9)'; ctx.font = '600 9px "Hanken Grotesk", sans-serif'; ctx.textAlign = 'center';
+  for (let i = 0; i < 3; i++) {
+    const f = ((dms / 1400) + i / 3) % 1;
+    ctx.globalAlpha = Math.sin(f * Math.PI) * .9;
+    ctx.fillText(i % 2 ? '♫' : '♪', 10 + i * 5 + Math.sin(f * 6 + i) * 4, -24 - f * 26);
+  }
+  ctx.globalAlpha = 1;
 }
 function drawSkydiver(p, t) {
   const show = smooth(.11, .13, p);
