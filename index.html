@@ -610,8 +610,8 @@ function landed(x, y, k, ms, t) {
   ctx.strokeStyle = 'rgba(230,236,245,.75)'; ctx.lineWidth = .8;
   if (pull < .98) [-1, -.5, .5, 1].forEach(f => { ctx.beginPath(); ctx.moveTo(cxp + f * cw / 2 * Math.cos(rot), cyp + f * cw / 2 * Math.sin(rot)); ctx.lineTo(hands[0], hands[1]); ctx.stroke(); });
   ctx.save(); ctx.translate(cxp, cyp); ctx.rotate(rot); canopyCells(cw, ch, 6 * sc * (1 - collapse * .7)); ctx.restore();
-  // 20 seconds after he starts waving, he breaks into a dance
-  const DANCE_AT = 4300 + 20000;
+  // 10 seconds after he starts waving, he breaks into a dance
+  const DANCE_AT = 4300 + 10000;
   if (ms >= DANCE_AT && !reduce) { dancer(ms - DANCE_AT, t); ctx.restore(); return; }
   // the jumper standing on the shore, leaning back as he pulls
   const lean = (pull > 0 && pull < 1 ? -.12 - Math.abs(tug) * .06 : 0);
