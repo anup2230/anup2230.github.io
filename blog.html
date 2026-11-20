@@ -51,7 +51,6 @@ article h1{font-size:clamp(2.6rem,7vw,4.2rem);line-height:.92}
 <body>
 <canvas id="sky" aria-hidden="true"></canvas>
 <main class="wrap" id="app"></main>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
 <script>
 (() => {
 'use strict';
@@ -60,6 +59,40 @@ const app = document.getElementById('app');
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const fmt = d => { const [y, m, dd] = d.split('-').map(Number); return new Date(y, m - 1, dd).toLocaleDateString('en-US', {month: 'long', day: 'numeric', year: 'numeric'}); };
 let posts = null;
+
+/* a small markdown renderer: headings, paragraphs, lists, quotes, code, bold, italics and links */
+function inline(t) {
+  t = esc(t);
+  t = t.replace(/`([^`]+)`/g, '<code>$1</code>');
+  t = t.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (m, txt, url) => {
+    const safe = /^(https?:|mailto:|#|\/|[\w.-]+\.(html|md)$)/i.test(url) ? url : '#';
+    const ext = /^https?:/i.test(safe) ? ' target="_blank" rel="noopener"' : '';
+    return `<a href="${safe}"${ext}>${txt}</a>`;
+  });
+  t = t.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>').replace(/(^|[^*])\*([^*]+)\*/g, '$1<em>$2</em>');
+  return t;
+}
+function md(src) {
+  const lines = src.replace(/\r/g, '').split('\n'), out = [];
+  let i = 0;
+  while (i < lines.length) {
+    const l = lines[i];
+    if (!l.trim()) { i++; continue; }
+    if (l.startsWith('```')) { const buf = []; i++; while (i < lines.length && !lines[i].startsWith('```')) buf.push(lines[i++]); i++; out.push(`<pre><code>${esc(buf.join('\n'))}</code></pre>`); continue; }
+    const h = l.match(/^(#{1,4})\s+(.*)/);
+    if (h) { const n = Math.min(4, h[1].length + 1); out.push(`<h${n}>${inline(h[2])}</h${n}>`); i++; continue; }
+    if (/^>\s?/.test(l)) { const buf = []; while (i < lines.length && /^>\s?/.test(lines[i])) buf.push(lines[i++].replace(/^>\s?/, '')); out.push(`<blockquote><p>${inline(buf.join(' '))}</p></blockquote>`); continue; }
+    if (/^(\s*[-*]\s+|\s*\d+\.\s+)/.test(l)) {
+      const ordered = /^\s*\d+\./.test(l), items = [];
+      while (i < lines.length && /^(\s*[-*]\s+|\s*\d+\.\s+)/.test(lines[i])) items.push(lines[i++].replace(/^(\s*[-*]\s+|\s*\d+\.\s+)/, ''));
+      out.push(`<${ordered ? 'ol' : 'ul'}>${items.map(x => `<li>${inline(x)}</li>`).join('')}</${ordered ? 'ol' : 'ul'}>`); continue;
+    }
+    if (/^!\[([^\]]*)\]\(([^)]+)\)/.test(l)) { const m = l.match(/^!\[([^\]]*)\]\(([^)]+)\)/); out.push(`<p><img src="${esc(m[2])}" alt="${esc(m[1])}"></p>`); i++; continue; }
+    const buf = []; while (i < lines.length && lines[i].trim() && !/^(#{1,4}\s|>|```|\s*[-*]\s+|\s*\d+\.\s+)/.test(lines[i])) buf.push(lines[i++]);
+    out.push(`<p>${inline(buf.join(' '))}</p>`);
+  }
+  return out.join('\n');
+}
 
 async function load() {
   if (posts) return posts;
@@ -72,12 +105,12 @@ async function render() {
   const list = await load();
   const post = slug && list.find(p => p.slug === slug);
   if (post) {
-    let md = '';
-    try { const r = await fetch(`blog/posts/${encodeURIComponent(post.slug)}.md`, {cache: 'no-store'}); md = r.ok ? await r.text() : ''; } catch (_) {}
+    let text = '';
+    try { const r = await fetch(`blog/posts/${encodeURIComponent(post.slug)}.md`, {cache: 'no-store'}); text = r.ok ? await r.text() : ''; } catch (_) {}
     document.title = `${post.title} | Anup Patel`;
     app.innerHTML = `<a class="back" href="blog.html#">← All posts</a>
       <article><h1>${esc(post.title)}</h1><span class="date">${esc(fmt(post.date))}</span>
-      <div class="prose">${md ? marked.parse(md) : '<p>This post couldn\'t be loaded. Try again in a moment.</p>'}</div></article>`;
+      <div class="prose">${text ? md(text) : '<p>This post couldn\'t be loaded. Try again in a moment.</p>'}</div></article>`;
     window.scrollTo(0, 0);
     return;
   }
